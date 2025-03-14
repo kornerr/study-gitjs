@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <title>Check isomorphic-git 0.70.7 and lightning fs 3.3.6</title>
+  </head>
+  <body>
+  </body>
+	<script src="https://unpkg.com/@isomorphic-git/lightning-fs@3.3.6/dist/lightning-fs.min.js"></script>
+	<script src="https://unpkg.com/isomorphic-git@0.70.7/dist/bundle.umd.min.js"></script>
+	<script>
+    async function checkIsomorphic() {
+      // Initialize isomorphic-git with a file system
+      // WIPE clean each run
+      window.fs = new LightningFS('fs', {wipe: true})
+      git.plugins.set('fs', window.fs)
+      window.pfs = window.fs.promises
+
+      window.dir = '/tutorial';
+      console.log("01", dir);
+      await pfs.mkdir(dir);
+      console.log("02", dir);
+      // Behold - it is empty!
+      var files = await pfs.readdir(dir);
+      console.log("03 before:", files);
+
+      await git.clone({
+        dir,
+        //corsProxy: 'https://cors.isomorphic-git.org',
+        corsProxy: 'https://study-vercel-eight.vercel.app',
+        url: 'https://github.com/OGStudio/pskov',
+        ref: 'main',
+        singleBranch: true,
+        depth: 1
+      });
+
+      // Now it should not be empty...
+      files = await pfs.readdir(dir);
+      console.log("04 after:", files);
+      var logs = await git.log({dir});
+      console.log("05 logs:", logs);
+    }
+
+    checkIsomorphic()
+	</script>
+</html>
