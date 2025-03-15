@@ -9,6 +9,10 @@
 
   <!-- Setup -->
 	<script>
+    var CORS_PROXY = "https://vercel-cors-proxy-pi.vercel.app";
+    var REPO_BRANCH = "main";
+    var REPO_URL = "https://git.opengamestudio.org/kornerr/study-gitjs-access";
+
     async function checkIsomorphic() {
       // Initialize isomorphic-git with a file system
       // WIPE clean each run
@@ -26,9 +30,9 @@
 
       await git.clone({
         dir,
-        corsProxy: 'https://vercel-cors-proxy-pi.vercel.app',
-        url: 'https://github.com/OGStudio/pskov',
-        ref: 'main',
+        corsProxy: CORS_PROXY,
+        url: REPO_URL,
+        ref: REPO_BRANCH,
         singleBranch: true,
         depth: 1
       });
