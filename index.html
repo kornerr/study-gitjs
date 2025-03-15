@@ -10,7 +10,9 @@
   <!-- Setup -->
 	<script>
     var CORS_PROXY = "https://vercel-cors-proxy-pi.vercel.app";
+    var DIR = "/tutorial";
     var REPO_BRANCH = "main";
+    var REPO_FILE = "README.md";
     var REPO_URL = "https://git.opengamestudio.org/kornerr/study-gitjs-access";
 
     async function checkIsomorphic() {
@@ -20,16 +22,15 @@
       git.plugins.set('fs', window.fs)
       window.pfs = window.fs.promises
 
-      window.dir = '/tutorial';
-      console.log("01", dir);
-      await pfs.mkdir(dir);
-      console.log("02", dir);
+      console.log("01", DIR);
+      await pfs.mkdir(DIR);
+      console.log("02", DIR);
       // Behold - it is empty!
-      var files = await pfs.readdir(dir);
+      var files = await pfs.readdir(DIR);
       console.log("03 before:", files);
 
       await git.clone({
-        dir,
+        DIR,
         corsProxy: CORS_PROXY,
         url: REPO_URL,
         ref: REPO_BRANCH,
@@ -38,10 +39,28 @@
       });
 
       // Now it should not be empty...
-      files = await pfs.readdir(dir);
+      files = await pfs.readdir(DIR);
       console.log("04 after:", files);
-      var logs = await git.log({dir});
+      var logs = await git.log(DIR);
       console.log("05 logs:", logs);
+
+      // Write to a file.
+      var filePath = `${DIR}/${REPO_FILE}`;
+      var contents = "This came from js. Now is: " + Date.now();
+      await pfs.writeFile(filePath, contents);
+
+      // Commit.
+      await git.commit({
+        DIR,
+        message: contents,
+        author: {
+          name: "GitJS",
+          email: "kornerr@gmail.com"
+        }
+      });
+
+      var logs = await git.log(DIR);
+      console.log("06 logs:", logs);
     }
 
   </script>
