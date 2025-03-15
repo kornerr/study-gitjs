@@ -3,6 +3,11 @@
     <title>Check isomorphic-git 0.70.7 and lightning fs 3.3.6</title>
   </head>
   <body>
+    <form onsubmit="event.preventDefault(); doPush();">
+      <input id="username" name="username" type="text" />
+      <input id="password" name="password" type="password" />
+      <input id="push" type="submit" value="Push" />
+    </form>
   </body>
 	<script src="lightning-fs-3.3.6.min.js"></script>
 	<script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
@@ -64,6 +69,10 @@
       var logs = await git.log({dir: DIR});
       console.log("06 logs:", logs);
     }
+
+    function doPush() {
+      console.log("TODO click, push");
+    };
 
   </script>
 
