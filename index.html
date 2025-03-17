@@ -3,10 +3,24 @@
     <title>Check isomorphic-git 0.70.7 and lightning fs 3.3.6</title>
   </head>
   <body>
+    <form onsubmit="event.preventDefault(); doPush();">
+      <input id="username" name="username" type="text" />
+      <input id="password" name="password" type="password" />
+      <input id="push" type="submit" value="Push" />
+    </form>
   </body>
-	<script src="https://unpkg.com/@isomorphic-git/lightning-fs@3.3.6/dist/lightning-fs.min.js"></script>
-	<script src="https://unpkg.com/isomorphic-git@0.70.7/dist/bundle.umd.min.js"></script>
+	<script src="lightning-fs-3.3.6.min.js"></script>
+	<script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
+
+  <!-- Setup -->
 	<script>
+    var CORS_PROXY = "https://vercel-cors-proxy-pi.vercel.app";
+    var DIR = "/tutorial";
+    window.dir = DIR;
+    var REPO_BRANCH = "main";
+    var REPO_FILE = "README.md";
+    var REPO_URL = "https://git.opengamestudio.org/kornerr/study-gitjs-access";
+
     async function checkIsomorphic() {
       // Initialize isomorphic-git with a file system
       // WIPE clean each run
@@ -14,31 +28,74 @@
       git.plugins.set('fs', window.fs)
       window.pfs = window.fs.promises
 
-      window.dir = '/tutorial';
-      console.log("01", dir);
-      await pfs.mkdir(dir);
-      console.log("02", dir);
+      console.log("01", DIR);
+      await pfs.mkdir(DIR);
+      console.log("02", DIR);
       // Behold - it is empty!
-      var files = await pfs.readdir(dir);
+      var files = await pfs.readdir(DIR);
       console.log("03 before:", files);
 
       await git.clone({
-        dir,
-        //corsProxy: 'https://cors.isomorphic-git.org',
-        corsProxy: 'https://study-vercel-eight.vercel.app',
-        url: 'https://github.com/OGStudio/pskov',
-        ref: 'main',
+        dir: DIR,
+        corsProxy: CORS_PROXY,
+        url: REPO_URL,
+        ref: REPO_BRANCH,
         singleBranch: true,
         depth: 1
       });
 
+      console.log("03.1");
       // Now it should not be empty...
-      files = await pfs.readdir(dir);
+      files = await pfs.readdir(DIR);
       console.log("04 after:", files);
-      var logs = await git.log({dir});
+      var logs = await git.log({dir: DIR});
       console.log("05 logs:", logs);
+
+      // Write to a file.
+      var filePath = `${DIR}/${REPO_FILE}`;
+      console.log("filePath", filePath);
+      var contents = "This came from js. Now is: " + Date.now();
+      await pfs.writeFile(filePath, contents);
+
+      // Add.
+      await git.add({
+        dir: DIR,
+        filepath: REPO_FILE
+      });
+
+      // Commit.
+      await git.commit({
+        dir: DIR,
+        message: contents,
+        author: {
+          name: "GitJS",
+          email: "kornerr@gmail.com"
+        }
+      });
+
+      var logs = await git.log({dir: DIR});
+      console.log("06 logs:", logs);
     }
 
+  </script>
+
+  <!-- Push -->
+  <script>
+    async function doPush() {
+      var usr = document.getElementById("username").value;
+      var pwd = document.getElementById("password").value;
+      console.log("push", usr);
+      var ret = await git.push({
+        dir: DIR,
+        username: usr,
+        password: pwd
+      });
+      console.log("push done:", ret);
+    };
+  </script>
+
+  <!-- Start -->
+  <script>
     checkIsomorphic()
 	</script>
 </html>
