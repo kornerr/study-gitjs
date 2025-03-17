@@ -11,16 +11,10 @@
   </body>
 	<script src="lightning-fs-3.3.6.min.js"></script>
 	<script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
+	<script src="constants.js"></script>
 
   <!-- Setup -->
 	<script>
-    var CORS_PROXY = "https://vercel-cors-proxy-pi.vercel.app";
-    var DIR = "/tutorial";
-    window.dir = DIR;
-    var REPO_BRANCH = "main";
-    var REPO_FILE = "README.md";
-    var REPO_URL = "https://git.opengamestudio.org/kornerr/study-gitjs-access";
-
     async function checkIsomorphic() {
       // Initialize isomorphic-git with a file system
       // WIPE clean each run
