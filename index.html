@@ -1,12 +1,48 @@
 <html>
   <head>
-    <title>Check isomorphic-git 0.70.7 and lightning fs 3.3.6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Study GitJS</title>
+    <style>
+      legend {
+        color: lightgrey;
+      }
+      fieldset {
+        border: 1px solid lightgrey;
+      }
+      input {
+        padding: 0.5em;
+        margin: 0.5em;
+      }
+      #message {
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
     <form onsubmit="event.preventDefault(); doPush();">
-      <input id="username" name="username" type="text" />
-      <input id="password" name="password" type="password" />
-      <input id="push" type="submit" value="Push" />
+      <fieldset>
+        <legend>Authentication</legend>
+        <input id="username" name="username" type="text" />
+        <input id="password" name="password" type="password" />
+        <input id="push" type="submit" value="Push" />
+      </fieldset>
+    </form>
+    <form onsubmit="event.preventDefault(); doSend();">
+      <fieldset>
+        <legend>Send message</legend>
+        <input id="message" name="message" type="text" />
+        <input id="send" type="submit" value="Send" />
+      </fieldset>
+    </form>
+    <form onsubmit="event.preventDefault()">
+      <fieldset>
+        <legend>Previous messages</legend>
+        <ul>
+          <li>Первое..</li>
+          <li>Второе..</li>
+          <li>Третье..</li>
+        </ul>
+      </fieldset>
     </form>
   </body>
 	<script src="lightning-fs-3.3.6.min.js"></script>
