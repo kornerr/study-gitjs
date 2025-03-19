@@ -54,7 +54,8 @@
   <script>
     async function runChat() {
       const fs = await createFileSystem(FS_STORAGE_NAME);
-      const files = fs.readdir("/");
+
+      const files = await fs.readdir("/");
       console.log("Files:", files);
     }
 
