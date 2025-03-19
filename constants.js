@@ -1,5 +1,6 @@
 const CORS_PROXY = "https://vercel-cors-proxy-pi.vercel.app";
-const DIR = "/tutorial";
+const DIR = "/";
+const FILE_CHAT_LOG = "chat.log";
 const FS_STORAGE_NAME = "study-gitjs";
 const REPO_BRANCH = "main";
 const REPO_FILE = "README.md";

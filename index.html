@@ -55,8 +55,33 @@
     async function runChat() {
       const fs = await createFileSystem(FS_STORAGE_NAME);
 
-      const files = await fs.readdir("/");
-      console.log("Files:", files);
+      var files = await fs.readdir("/");
+      console.log("01. Files:", files);
+
+      if (files.length == 0) {
+        console.log("02-1. Clone");
+        await clone(REPO_URL, REPO_BRANCH);
+      } else {
+        console.log("02-2. Pull");
+        await pull(REPO_URL, REPO_BRANCH);
+      }
+
+      files = await fs.readdir("/");
+      console.log("03. Files:", files);
+
+      var contents = ""
+      if (files.includes(FILE_CHAT_LOG)) {
+        contents = await fs.readFile(FILE_CHAT_LOG, {encoding: "utf8"});
+      }
+      console.log("04. Contents:", contents);
+    }
+
+    async function sendMessage(priorContents, newMessage) {
+      var contents = priorContents + "/n/n" + newMessage;
+      var enc = new TextEncoder().encode(contents);
+      await fs.writeFile(FILE_CHAT_LOG, {encoding: "utf8"});
+      await add(REPO_URL, REPO_BRANCH);
+      await push(REPO_URL, REPO_BRANCH);
     }
 
     runChat()
