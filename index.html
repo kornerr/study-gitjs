@@ -19,28 +19,18 @@
     </style>
   </head>
   <body>
-    <form>
-      <fieldset>
-        <legend>Authentication</legend>
-        <div>
-          <label for="username">Username:</label>
-          <input id="username" name="username" type="text" />
-        </div>
-        <div>
-          <label for="password">Password:</label>
-          <input id="password" name="password" type="password" />
-        </div>
-        <div>
-          <label for="branch">Branch:</label>
-          <input id="branch" name="branch" type="text" />
-        </div>
-      </fieldset>
-    </form>
     <form onsubmit="event.preventDefault(); doSend();">
       <fieldset>
-        <legend>Send message</legend>
-        <input id="message" name="message" type="text" />
-        <input id="send" type="submit" value="Send" />
+        <legend>Authentication + Sending </legend>
+        <div>
+          <input id="username" name="username" type="text" placeholder="Username"/>
+          <input id="password" name="password" type="password" placeholder="Password"/>
+          <input id="branch" name="branch" type="text" placeholder="Branch"/>
+        </div>
+        <div>
+          <input id="message" name="message" type="text" placeholder="Message to send" />
+          <input id="send" type="submit" value="Send" />
+        </div>
       </fieldset>
     </form>
     <form>
