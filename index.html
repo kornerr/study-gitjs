@@ -19,7 +19,7 @@
     </style>
   </head>
   <body>
-    <form onsubmit="event.preventDefault(); doSend();">
+    <form id="auth">
       <fieldset>
         <legend>Authentication + Sending </legend>
         <div>
@@ -44,7 +44,8 @@
     </form>
   </body>
 	<script src="lightning-fs-3.3.6.min.js"></script>
-	<script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
+  <!--<script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>-->
+	<script src="isomorphic-git-0.70.7-unmin.js"></script>
 	<script src="constants.js"></script>
 	<script src="check.js"></script>
 	<script src="other.js"></script>
@@ -52,6 +53,7 @@
   <script>
     async function runChat() {
       const fs = await createFileSystem(FS_STORAGE_NAME);
+      window.pfs = fs;
 
       var files = await fs.readdir("/");
       console.log("01. Files:", files);
@@ -69,18 +71,40 @@
 
       var contents = ""
       if (files.includes(FILE_CHAT_LOG)) {
-        contents = await fs.readFile(FILE_CHAT_LOG, {encoding: "utf8"});
+        contents = await fs.readFile(DIR + FILE_CHAT_LOG, {encoding: "utf8"});
       }
       console.log("04. Contents:", contents);
     }
 
-    async function sendMessage(priorContents, newMessage) {
-      var contents = priorContents + "/n/n" + newMessage;
+    async function doSend() {
+      var fs = window.pfs;
+      console.log("doSend-01");
+      var contentsWas = await fs.readFile(DIR + FILE_CHAT_LOG, {encoding: "utf8"});
+      console.log("doSend-02");
+      var newMessage = document.getElementById("message").value;
+      console.log("doSend-03");
+      var contents = contentsWas + "\n" + newMessage;
+      console.log("doSend-04");
       var enc = new TextEncoder().encode(contents);
-      await fs.writeFile(FILE_CHAT_LOG, {encoding: "utf8"});
-      await add(REPO_URL, REPO_BRANCH);
-      await push(REPO_URL, REPO_BRANCH);
+      console.log("doSend-05");
+      await fs.writeFile(DIR + FILE_CHAT_LOG, {encoding: "utf8"});
+      console.log("doSend-06");
+      window.dir = DIR;
+      await git.add({
+        dir,
+        filepath: FILE_CHAT_LOG,
+      });
+      console.log("doSend-07");
+      //await commit
+      //await push(REPO_URL, REPO_BRANCH);
+      console.log("doSend-08");
     }
+
+    var auth = document.getElementById("auth");
+    auth.addEventListener("submit", function(e) {
+      e.preventDefault();
+      doSend();
+    });
 
     runChat()
 	</script>

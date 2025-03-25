@@ -1,3 +1,10 @@
+async function add(path) {
+  return await git.add({
+    dir: DIR,
+    filepath: path,
+  });
+}
+
 async function clone(url, branch) {
   return await git.clone({
     dir: DIR,
@@ -17,6 +24,16 @@ async function createFileSystem(storageName) {
 
 async function pull(url, branch) {
   return await git.pull({
+    dir: DIR,
+    corsProxy: CORS_PROXY,
+    url: url,
+    ref: branch,
+    singleBranch: true,
+  });
+}
+
+async function push(url, branch) {
+  return await git.push({
     dir: DIR,
     corsProxy: CORS_PROXY,
     url: url,
