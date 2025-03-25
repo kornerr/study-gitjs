@@ -1,7 +1,7 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Study GitJS</title>
+    <title>Study GitJS 2025-03-25</title>
     <style>
       legend {
         color: lightgrey;
@@ -19,22 +19,21 @@
     </style>
   </head>
   <body>
-    <form onsubmit="event.preventDefault(); doPush();">
+    <form>
       <fieldset>
         <legend>Authentication</legend>
-        <input id="username" name="username" type="text" />
-        <input id="password" name="password" type="password" />
-        <input id="push" type="submit" value="Push" />
-      </fieldset>
-    </form>
-    <form onsubmit="event.preventDefault()">
-      <fieldset>
-        <legend>Previous messages</legend>
-        <ul>
-          <li>Первое..</li>
-          <li>Второе..</li>
-          <li>Третье..</li>
-        </ul>
+        <div>
+          <label for="username">Username:</label>
+          <input id="username" name="username" type="text" />
+        </div>
+        <div>
+          <label for="password">Password:</label>
+          <input id="password" name="password" type="password" />
+        </div>
+        <div>
+          <label for="branch">Branch:</label>
+          <input id="branch" name="branch" type="text" />
+        </div>
       </fieldset>
     </form>
     <form onsubmit="event.preventDefault(); doSend();">
@@ -42,6 +41,15 @@
         <legend>Send message</legend>
         <input id="message" name="message" type="text" />
         <input id="send" type="submit" value="Send" />
+      </fieldset>
+    </form>
+    <form>
+      <fieldset>
+        <legend>Previous N messages</legend>
+        <ul>
+          <li>todo-1..</li>
+          <li>todo-2..</li>
+        </ul>
       </fieldset>
     </form>
   </body>
