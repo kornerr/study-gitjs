@@ -4,6 +4,16 @@
     <title>Repeat 0.70.7 code</title>
   </head>
   <body>
+    <form id="auth">
+      <fieldset>
+        <legend>Authentication + Sending </legend>
+        <div>
+          <input id="username" name="username" type="text" placeholder="Username"/>
+          <input id="password" name="password" type="password" placeholder="Password"/>
+          <input id="send" type="submit" value="Send" />
+        </div>
+      </fieldset>
+    </form>
 	<script src="lightning-fs-3.3.6.min.js"></script>
   <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
   <!-- Start -->
@@ -50,5 +60,25 @@
     }
 
     run()
+
+    var auth = document.getElementById("auth");
+    auth.addEventListener("submit", function(e) {
+      e.preventDefault();
+      doSend();
+    });
+
+    async function doSend() {
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+      console.log(username);
+      var res = await git.push({
+        dir,
+        remote: "origin",
+        username: username,
+        password: password,
+        corsProxy: "https://vercel-cors-proxy-pi.vercel.app"
+      });
+      console.log(res);
+    }
 	</script>
 </html>
