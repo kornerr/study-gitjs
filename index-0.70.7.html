@@ -34,6 +34,19 @@
       }
       var contents03 = await pfs.readdir(dir)
       console.log(`03 ${dir}:`, contents03);
+
+      var contents04 = await pfs.readFile(dir + "/chat.log", {encoding: "utf8"});
+      console.log(`04 ${dir}/chat.log:`, contents04);
+
+      contents04 += `\n${Date()}: Added from JS`;
+
+      await pfs.writeFile(dir + "/chat.log", contents04, {encoding: "utf8"});
+      var contents05 = await pfs.readFile(dir + "/chat.log", {encoding: "utf8"});
+      console.log(`05 ${dir}/chat.log:`, contents05);
+
+      await git.add({dir, filepath: "chat.log"});
+      await git.commit({dir, message: "From JS", author: {name: "JS", email: "gitjs.org"}});
+
     }
 
     run()
