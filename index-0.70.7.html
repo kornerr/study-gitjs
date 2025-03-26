@@ -19,7 +19,7 @@
   <!-- Start -->
   <script>
     async function run() {
-      window.fs = new LightningFS("STORAGE-study-git");
+      window.fs = new LightningFS("STORAGE-study-git", {wipe: false});
       git.plugins.set("fs", window.fs);
       window.pfs = window.fs.promises;
       window.dirRel = "tutorial";
@@ -32,7 +32,8 @@
       var contents02 = await pfs.readdir(dir)
       console.log(`02 ${dir}:`, contents02);
 
-      if (!contents01.includes(dirRel)) {
+      if (!contents02.includes(".git")) {
+        console.log("02.1.clone begin");
         await git.clone({
           dir,
           corsProxy: "https://vercel-cors-proxy-pi.vercel.app",
@@ -41,6 +42,16 @@
           singleBranch: true,
           depth: 1
         });
+        console.log("02.1.clone end");
+      } else {
+        console.log("02.2.pull begin");
+        await git.checkout({dir, ref: "main"});
+        await git.pull({
+          dir,
+          corsProxy: "https://vercel-cors-proxy-pi.vercel.app",
+          url: "https://git.opengamestudio.org/kornerr/study-gitjs-access",
+        });
+        console.log("02.2.pull end");
       }
       var contents03 = await pfs.readdir(dir)
       console.log(`03 ${dir}:`, contents03);
