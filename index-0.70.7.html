@@ -45,7 +45,7 @@
         console.log("02.1.clone end");
       } else {
         console.log("02.2.pull begin");
-        await git.checkout({dir, ref: "main"});
+        //await git.checkout({dir, ref: "main"});
         await git.pull({
           dir,
           corsProxy: "https://vercel-cors-proxy-pi.vercel.app",
