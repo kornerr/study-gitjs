@@ -3,6 +3,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Attempt 3</title>
     <style>
+      #request-repo {
+        display: none;
+      }
       #request-repo-div {
         display: flex;
       }
@@ -22,5 +25,30 @@
         </div>
       </fieldset>
     </form>
+    <!-- Dependencies -->
+		<script src="lightning-fs-3.3.6.min.js"></script>
+    <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
+    <!-- Globals -->
+    <script>
+      window.fs = new LightningFS("STORAGE-attempt3");
+      git.plugins.set("fs", window.fs);
+      window.pfs = window.fs.promises;
+      window.DIR_REL = "attempt3";
+      window.DIR = "/" + DIR_REL;
+    </script>
+    <!-- Tasks -->
+    <script src="DoRequestRepoAndBranch.js"></script>
+    <!-- Run tasks -->
+    <script>
+      var tasks = [
+        new DoRequestRepoAndBranch(
+          document.getElementById("request-repo")
+        ),
+      ];
+      for (const i in tasks) {
+        var task = tasks[i];
+        task.execute();
+      }
+    </script>
   </body>
 </html>
