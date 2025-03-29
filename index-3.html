@@ -3,10 +3,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Attempt 3</title>
     <style>
-      #request-repo {
+      #repo {
         display: none;
       }
-      #request-repo-div {
+      #repo-div {
         display: flex;
       }
       #repo-url {
@@ -16,10 +16,10 @@
     </style>
   </head>
   <body>
-    <form id="request-repo">
+    <form id="repo">
       <fieldset>
         <legend>Select chat repository</legend>
-        <div id="request-repo-div">
+        <div id="repo-div">
           <input id="repo-url" name="repo-url" type="text" placeholder="For example: https://git.opengamestudio.org/kornerr/study-gitjs-access"/>
           <input id="repo-accept" type="submit" value="Accept" />
         </div>
@@ -33,8 +33,10 @@
       window.fs = new LightningFS("STORAGE-attempt3");
       git.plugins.set("fs", window.fs);
       window.pfs = window.fs.promises;
+
       window.DIR_REL = "attempt3";
       window.DIR = "/" + DIR_REL;
+      window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
     <script>
@@ -43,13 +45,11 @@
       }
     </script>
     <!-- Tasks -->
-    <script src="DoRequestRepoAndBranch.js"></script>
+    <script src="DoRequestRepo.js"></script>
     <!-- Run tasks -->
     <script>
       var tasks = [
-        new DoRequestRepoAndBranch(
-          deId("request-repo")
-        ),
+        new DoRequestRepo(deId("repo"), deId("repo-accept"), deId("repo-url")),
       ];
       for (const i in tasks) {
         var task = tasks[i];
