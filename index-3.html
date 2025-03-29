@@ -28,7 +28,7 @@
     <!-- Dependencies -->
 		<script src="lightning-fs-3.3.6.min.js"></script>
     <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
-    <!-- Globals -->
+    <!-- Global entities and constants -->
     <script>
       window.fs = new LightningFS("STORAGE-attempt3");
       git.plugins.set("fs", window.fs);
@@ -36,13 +36,19 @@
       window.DIR_REL = "attempt3";
       window.DIR = "/" + DIR_REL;
     </script>
+    <!-- Global reusable functions -->
+    <script>
+      function deId(sid) {
+        return document.getElementById(sid);
+      }
+    </script>
     <!-- Tasks -->
     <script src="DoRequestRepoAndBranch.js"></script>
     <!-- Run tasks -->
     <script>
       var tasks = [
         new DoRequestRepoAndBranch(
-          document.getElementById("request-repo")
+          deId("request-repo")
         ),
       ];
       for (const i in tasks) {
