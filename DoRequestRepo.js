@@ -39,7 +39,8 @@ function DoRequestRepo(
                 url: this.elURL.value,
             });
         } catch (e) {
-          console.log("err", e);
+            reportError(ERR_GIT_CLONE_FAILED, e);
+            await walkFiles(DIR);
         }
         console.log("res", res);
         console.log("ИГР DoRR.processU-03");

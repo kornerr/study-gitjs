@@ -36,12 +36,41 @@
 
       window.DIR_REL = "attempt3";
       window.DIR = "/" + DIR_REL;
+      window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
       window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
     <script>
+      // Get element by id.
       function deId(sid) {
         return document.getElementById(sid);
+      }
+
+      // Report error with an alert.
+      function reportError(title, err) {
+        alert(title + "\n\n" + err.name + ": " + err.message);
+      }
+
+      // List files recursively.
+      async function walkFiles(path, indent) {
+          if (indent == null) {
+              indent = 0;
+          }
+          var files = await pfs.readdir(path)
+          for (var i in files) {
+              var sindent = ""
+              for (k = 0; k < indent; ++k) {
+                  sindent += ">";
+              }
+              var f = files[i];
+              console.log(`${sindent}${f}`);
+              var fullPath = path + "/" + f;
+              var st = fs.stat(fullPath);
+              console.log("st", st);
+              //if (st.type == "dir") {
+                  await walkFiles(fullPath, indent + 1);
+              //}
+          }
       }
     </script>
     <!-- Tasks -->
