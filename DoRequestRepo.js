@@ -40,7 +40,9 @@ function DoRequestRepo(
             });
         } catch (e) {
             reportError(ERR_GIT_CLONE_FAILED, e);
-            await walkFiles(DIR);
+            var files = [];
+            await walkFiles(DIR, files);
+            console.log("err files:", files);
         }
         console.log("res", res);
         console.log("ИГР DoRR.processU-03");
