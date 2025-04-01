@@ -31,20 +31,20 @@ function DoRequestRepo(
         this.setLoading(true);
         console.log("ИГР DoRR.processU-02 url:", this.elURL.value);
 
-        var res = null;
         try {
-            res = await git.clone({
+            await git.clone({
                 dir: DIR,
                 corsProxy: PROXY,
                 url: this.elURL.value,
             });
         } catch (e) {
             reportError(ERR_GIT_CLONE_FAILED, e);
+            // Collect all files and directories.
             var files = [];
             await walkFiles(DIR, files);
-            console.log("err files:", files);
+            // Remove collected files and directories.
+            await rmFiles(files.reverse());
         }
-        console.log("res", res);
         console.log("ИГР DoRR.processU-03");
 
         this.setLoading(false);

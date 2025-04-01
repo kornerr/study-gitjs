@@ -51,6 +51,18 @@
         alert(title + "\n\n" + err.name + ": " + err.message);
       }
 
+      // Remove files recursively.
+      async function rmFiles(files) {
+          for (var i in files) {
+              var f = files[i];
+              if (f.endsWith("/")) {
+                  await pfs.rmdir(f);
+              } else {
+                  await pfs.unlink(f);
+              }
+          }
+      }
+
       // List files recursively.
       async function walkFiles(path, collection) {
           collection.push(path + "/");
