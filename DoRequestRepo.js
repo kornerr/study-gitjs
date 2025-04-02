@@ -1,32 +1,32 @@
 function DoRequestRepo(
     elForm,
     elAccept,
-    elURL
+    elURL,
+    scheduleExec
 ) {
-    this.construct = function() {
+    this._construct = function() {
         this.elForm = elForm;
         this.elAccept = elAccept;
         this.elURL = elURL;
+        this.rootFiles = [];
 
         var self = this;
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
-            self.processURL();
+            scheduleExec();
         });
     };
-    this.construct();
+    this._construct();
 
-    this.displayUI = function(rootFiles) {
-        var isVisible = !rootFiles.includes(DIR_REL);
-        elForm.style.display = isVisible ? "block" : "none";
-    };
+    this.cloneRepository = async function() {
+        // Skip cloning if:
+        // 1. target directory is already present
+        // 2. URL is empty
+        if (this.shouldSkipCloning()) {
+            console.log("ИГР DoRR.processU-00.interrupt");
+            return;
+        }
 
-    this.execute = async function() {
-        var rootFiles = await pfs.readdir("/");
-        this.displayUI(rootFiles);
-    };
-
-    this.processURL = async function() {
         console.log("ИГР DoRR.processU-01");
         this.setLoading(true);
         console.log("ИГР DoRR.processU-02 url:", this.elURL.value);
@@ -37,17 +37,37 @@ function DoRequestRepo(
                 corsProxy: PROXY,
                 url: this.elURL.value,
             });
+            scheduleExec();
         } catch (e) {
+            this.eraseClone();
             reportError(ERR_GIT_CLONE_FAILED, e);
-            // Collect all files and directories.
-            var files = [];
-            await walkFiles(DIR, files);
-            // Remove collected files and directories.
-            await rmFiles(files.reverse());
         }
         console.log("ИГР DoRR.processU-03");
 
         this.setLoading(false);
+    };
+
+    this.eraseClone = async function() {
+        // Collect all files and directories.
+        var files = [];
+        await walkFiles(DIR, files);
+        // Remove collected files and directories.
+        await rmFiles(files.reverse());
+    };
+
+    this.execute = async function() {
+        await this.resetRootFiles();
+        this.resetUIVisiblity();
+        await this.cloneRepository();
+    };
+
+    this.resetRootFiles = async function() {
+        this.rootFiles = await pfs.readdir("/");
+    };
+
+    this.resetUIVisiblity = function() {
+        var isVisible = !this.rootFiles.includes(DIR_REL);
+        elForm.style.display = isVisible ? "block" : "none";
     };
 
     this.setLoading = function(state) {
@@ -57,5 +77,12 @@ function DoRequestRepo(
             this.elURL.removeAttribute("disabled");
         }
         this.elAccept.style.display = state ? "none" : "block";
+    };
+
+    this.shouldSkipCloning = function() {
+        var targetDirIsPresent = this.rootFiles.includes(DIR_REL);
+        var urlIsEmpty = (this.elURL.value.length == 0);
+        console.log("ИГР DoRR.shouldSC-01 targetDIP/urlIE/elURL:", targetDirIsPresent, urlIsEmpty, this.elURL.value);
+        return !targetDirIsPresent || urlIsEmpty;
     };
 }

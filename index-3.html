@@ -83,8 +83,11 @@
     <script src="DoRequestRepo.js"></script>
     <!-- Run tasks -->
     <script>
+      function scheduleExec() {
+        console.log("TODO scheduleE");
+      }
       var tasks = [
-        new DoRequestRepo(deId("repo"), deId("repo-accept"), deId("repo-url")),
+        new DoRequestRepo(deId("repo"), deId("repo-accept"), deId("repo-url"), scheduleExec),
       ];
       for (const i in tasks) {
         var task = tasks[i];
