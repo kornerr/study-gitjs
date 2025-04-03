@@ -23,13 +23,12 @@ function DoRequestRepo(
         // 1. target directory is already present
         // 2. URL is empty
         if (this.shouldSkipCloning()) {
-            console.log("ИГР DoRR.processU-00.interrupt");
+            console.log("ИГР DoRR.cloneR-01.interrupt");
             return;
         }
 
-        console.log("ИГР DoRR.processU-01");
+        console.log("ИГР DoRR.cloneR-02 url:", this.elURL.value);
         this.setLoading(true);
-        console.log("ИГР DoRR.processU-02 url:", this.elURL.value);
 
         try {
             await git.clone({
@@ -42,7 +41,7 @@ function DoRequestRepo(
             this.eraseClone();
             reportError(ERR_GIT_CLONE_FAILED, e);
         }
-        console.log("ИГР DoRR.processU-03");
+        console.log("ИГР DoRR.cloneR-03");
 
         this.setLoading(false);
     };
@@ -59,6 +58,10 @@ function DoRequestRepo(
         await this.resetRootFiles();
         this.resetUIVisiblity();
         await this.cloneRepository();
+
+        var files = [];
+        await walkFiles("/", files);
+        console.log("ИГР DoRR.execute-01 files:", files);
     };
 
     this.resetRootFiles = async function() {

@@ -65,7 +65,8 @@
 
       // List files recursively.
       async function walkFiles(path, collection) {
-          collection.push(path + "/");
+          var suffix = path == "/" ? "" : "/";
+          collection.push(path + suffix);
           var files = await pfs.readdir(path)
           for (var i in files) {
               var f = files[i];
