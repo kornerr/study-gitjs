@@ -30,70 +30,75 @@
     <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
     <!-- Global entities and constants -->
     <script>
-      window.fs = new LightningFS("STORAGE-attempt3");
-      git.plugins.set("fs", window.fs);
-      window.pfs = window.fs.promises;
-
-      window.DIR_REL = "attempt3";
-      window.DIR = "/" + DIR_REL;
-      window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
-      window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
+        window.fs = new LightningFS("STORAGE-attempt3");
+        git.plugins.set("fs", window.fs);
+        window.pfs = window.fs.promises;
+       
+        window.DIR_REL = "attempt3";
+        window.DIR = "/" + DIR_REL;
+        window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
+        window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
     <script>
-      // Get element by id.
-      function deId(sid) {
-        return document.getElementById(sid);
-      }
-
-      // Report error with an alert.
-      function reportError(title, err) {
-        alert(title + "\n\n" + err.name + ": " + err.message);
-      }
-
-      // Remove files recursively.
-      async function rmFiles(files) {
-          for (var i in files) {
-              var f = files[i];
-              if (f.endsWith("/")) {
-                  await pfs.rmdir(f);
-              } else {
-                  await pfs.unlink(f);
-              }
-          }
-      }
-
-      // List files recursively.
-      async function walkFiles(path, collection) {
-          var suffix = path == "/" ? "" : "/";
-          collection.push(path + suffix);
-          var files = await pfs.readdir(path)
-          for (var i in files) {
-              var f = files[i];
-              var fullPath = path + "/" + f;
-              var st = await pfs.stat(fullPath);
-              if (st.type == "dir") {
-                  await walkFiles(fullPath, collection);
-              } else {
-                  collection.push(fullPath);
-              }
-          }
-      }
+        // Get element by id.
+        function deId(sid) {
+            return document.getElementById(sid);
+        }
+       
+        // Report error with an alert.
+        function reportError(title, err) {
+            alert(title + "\n\n" + err.name + ": " + err.message);
+        }
+       
+        // Remove files recursively.
+        async function rmFiles(files) {
+            for (var i in files) {
+                var f = files[i];
+                if (f.endsWith("/")) {
+                    await pfs.rmdir(f);
+                } else {
+                    await pfs.unlink(f);
+                }
+            }
+        }
+       
+        // List files recursively.
+        async function walkFiles(path, collection) {
+            var suffix = path == "/" ? "" : "/";
+            collection.push(path + suffix);
+            var files = await pfs.readdir(path)
+            for (var i in files) {
+                var f = files[i];
+                var fullPath = path + "/" + f;
+                var st = await pfs.stat(fullPath);
+                if (st.type == "dir") {
+                    await walkFiles(fullPath, collection);
+                } else {
+                    collection.push(fullPath);
+                }
+            }
+        }
     </script>
     <!-- Tasks -->
     <script src="DoRequestRepo.js"></script>
     <!-- Run tasks -->
     <script>
-      function scheduleExec() {
-        console.log("TODO scheduleE");
-      }
-      var tasks = [
-        new DoRequestRepo(deId("repo"), deId("repo-accept"), deId("repo-url"), scheduleExec),
-      ];
-      for (const i in tasks) {
-        var task = tasks[i];
-        task.execute();
-      }
+        function scheduleExec() {
+            console.log("TODO scheduleE");
+        }
+        var tasks = [
+            new DoRequestRepo(
+                deId("repo"),
+                deId("repo-accept"),
+                deId("repo-url")
+            ),
+        ];
+        for (const i in tasks) {
+            var task = tasks[i];
+            task.schedule = scheduleExec;
+            task.execute();
+        }
     </script>
   </body>
 </html>

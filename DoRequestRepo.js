@@ -1,19 +1,19 @@
 function DoRequestRepo(
     elForm,
     elAccept,
-    elURL,
-    scheduleExec
+    elURL
 ) {
     this._construct = function() {
         this.elForm = elForm;
         this.elAccept = elAccept;
         this.elURL = elURL;
         this.rootFiles = [];
+        this.schedule = null;
 
         var self = this;
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
-            scheduleExec();
+            self.schedule();
         });
     };
     this._construct();
@@ -36,7 +36,7 @@ function DoRequestRepo(
                 corsProxy: PROXY,
                 url: this.elURL.value,
             });
-            scheduleExec();
+            this.schedule();
         } catch (e) {
             this.eraseClone();
             reportError(ERR_GIT_CLONE_FAILED, e);
