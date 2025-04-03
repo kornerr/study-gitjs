@@ -4,6 +4,7 @@ function DoRequestRepo(
     elURL
 ) {
     this._construct = function() {
+        this.doClone = false;
         this.elForm = elForm;
         this.elAccept = elAccept;
         this.elURL = elURL;
@@ -13,19 +14,20 @@ function DoRequestRepo(
         var self = this;
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
+            self.doClone = true;
             self.schedule();
         });
     };
     this._construct();
 
     this.cloneRepository = async function() {
-        // Skip cloning if:
-        // 1. target directory is already present
-        // 2. URL is empty
-        if (this.shouldSkipCloning()) {
+        var proceed = this.shouldProceedCloning();
+        console.log("ИГР DoRR.cloneR-00 proceed:", proceed);
+        if (!proceed) {
             console.log("ИГР DoRR.cloneR-01.interrupt");
             return;
         }
+        this.doClone = false;
 
         console.log("ИГР DoRR.cloneR-02 url:", this.elURL.value);
         this.setLoading(true);
@@ -82,10 +84,10 @@ function DoRequestRepo(
         this.elAccept.style.display = state ? "none" : "block";
     };
 
-    this.shouldSkipCloning = function() {
+    this.shouldProceedCloning = function() {
         var targetDirIsPresent = this.rootFiles.includes(DIR_REL);
         var urlIsEmpty = (this.elURL.value.length == 0);
-        console.log("ИГР DoRR.shouldSC-01 targetDIP/urlIE/elURL:", targetDirIsPresent, urlIsEmpty, this.elURL.value);
-        return !targetDirIsPresent || urlIsEmpty;
+        console.log("ИГР DoRR.shouldPC-01 targetDIP/urlIE/elURL/doC:", targetDirIsPresent, urlIsEmpty, this.elURL.value, this.doClone);
+        return this.doClone && !targetDirIsPresent && !urlIsEmpty;
     };
 }

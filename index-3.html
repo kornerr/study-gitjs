@@ -70,7 +70,7 @@
             var files = await pfs.readdir(path)
             for (var i in files) {
                 var f = files[i];
-                var fullPath = path + "/" + f;
+                var fullPath = path + suffix + f;
                 var st = await pfs.stat(fullPath);
                 if (st.type == "dir") {
                     await walkFiles(fullPath, collection);
@@ -81,11 +81,24 @@
         }
     </script>
     <!-- Tasks -->
+    <script src="DoEnd.js"></script>
     <script src="DoRequestRepo.js"></script>
     <!-- Run tasks -->
     <script>
-        function scheduleExec() {
-            console.log("TODO scheduleE");
+        var scheduledTasks = {};
+        function scheduleExec(id) {
+            console.log("ИГР scheduleE id:", id);
+            scheduledTasks[id] = true;
+            setTimeout(executeScheduledTasks, 50);
+        }
+        function executeScheduledTasks() {
+            var ids = Object.keys(scheduledTasks);
+            scheduledTasks = {};
+            console.log("ИГР executeST count:", ids.length);
+            for (var i in ids) {
+                var id = ids[i];
+                tasks[id].execute();
+            }
         }
         var tasks = [
             new DoRequestRepo(
@@ -93,10 +106,11 @@
                 deId("repo-accept"),
                 deId("repo-url")
             ),
+            new DoEnd(),
         ];
         for (const i in tasks) {
             var task = tasks[i];
-            task.schedule = scheduleExec;
+            task.schedule = () => { scheduleExec(i); };
             task.execute();
         }
     </script>
