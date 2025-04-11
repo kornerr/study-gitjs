@@ -1,0 +1,98 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Repeat 0.70.7 code</title>
+  </head>
+  <body>
+    <form id="auth">
+      <fieldset>
+        <legend>Authentication + Sending </legend>
+        <div>
+          <input id="username" name="username" type="text" placeholder="Username"/>
+          <input id="password" name="password" type="password" placeholder="Password"/>
+          <input id="send" type="submit" value="Send" />
+        </div>
+      </fieldset>
+    </form>
+	<script src="lightning-fs-3.3.6.min.js"></script>
+  <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
+  <!-- Start -->
+  <script>
+    async function run() {
+      window.fs = new LightningFS("STORAGE-study-git", {wipe: false});
+      git.plugins.set("fs", window.fs);
+      window.pfs = window.fs.promises;
+      window.dirRel = "tutorial";
+      window.dir = "/" + dirRel;
+      var contents01 = await pfs.readdir("/");
+      console.log("01. root:", contents01);
+      if (!contents01.includes(dirRel)) {
+        await pfs.mkdir(dir);
+      }
+      var contents02 = await pfs.readdir(dir)
+      console.log(`02 ${dir}:`, contents02);
+
+      if (!contents02.includes(".git")) {
+        console.log("02.1.clone begin");
+        await git.clone({
+          dir,
+          corsProxy: "https://vercel-cors-proxy-pi.vercel.app",
+          url: "https://git.opengamestudio.org/kornerr/study-gitjs-access",
+          ref: "main",
+          singleBranch: true,
+          depth: 10
+        });
+        console.log("02.1.clone end");
+      } else {
+        console.log("02.2.pull begin");
+        await git.checkout({dir, ref: "main"});
+        await git.pull({
+          dir,
+          corsProxy: "https://vercel-cors-proxy-pi.vercel.app",
+          url: "https://git.opengamestudio.org/kornerr/study-gitjs-access",
+        });
+        console.log("02.2.pull end");
+      }
+      var contents03 = await pfs.readdir(dir)
+      console.log(`03 ${dir}:`, contents03);
+
+      var contents04 = await pfs.readFile(dir + "/chat.log", {encoding: "utf8"});
+      console.log(`04 ${dir}/chat.log:`, contents04);
+
+      contents04 += `\n${Date()}: Added from JS`;
+
+      await pfs.writeFile(dir + "/chat.log", contents04, {encoding: "utf8"});
+      var contents05 = await pfs.readFile(dir + "/chat.log", {encoding: "utf8"});
+      console.log(`05 ${dir}/chat.log:`, contents05);
+
+      await git.add({dir, filepath: "chat.log"});
+      await git.commit({dir, message: "From JS", author: {name: "JS", email: "gitjs.org"}});
+
+    }
+
+    var dt = new Date();
+    console.log(dt.toISOString());
+
+    //run()
+
+    var auth = document.getElementById("auth");
+    auth.addEventListener("submit", function(e) {
+      e.preventDefault();
+      doSend();
+    });
+
+    async function doSend() {
+      var username = document.getElementById("username").value;
+      var password = document.getElementById("password").value;
+      console.log(username);
+      var res = await git.push({
+        dir,
+        remote: "origin",
+        username: username,
+        password: password,
+        corsProxy: "https://vercel-cors-proxy-pi.vercel.app"
+      });
+      console.log(res);
+    }
+	</script>
+</html>

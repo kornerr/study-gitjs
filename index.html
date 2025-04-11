@@ -1,101 +1,111 @@
 <html>
   <head>
-    <title>Check isomorphic-git 0.70.7 and lightning fs 3.3.6</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Study GitJS 2025-03-25</title>
+    <style>
+      legend {
+        color: lightgrey;
+      }
+      fieldset {
+        border: 1px solid lightgrey;
+      }
+      input {
+        padding: 0.5em;
+        margin: 0.5em;
+      }
+      #message {
+        width: 100%;
+      }
+    </style>
   </head>
   <body>
-    <form onsubmit="event.preventDefault(); doPush();">
-      <input id="username" name="username" type="text" />
-      <input id="password" name="password" type="password" />
-      <input id="push" type="submit" value="Push" />
+    <form id="auth">
+      <fieldset>
+        <legend>Authentication + Sending </legend>
+        <div>
+          <input id="username" name="username" type="text" placeholder="Username"/>
+          <input id="password" name="password" type="password" placeholder="Password"/>
+          <input id="branch" name="branch" type="text" placeholder="Branch"/>
+        </div>
+        <div>
+          <input id="message" name="message" type="text" placeholder="Message to send" />
+          <input id="send" type="submit" value="Send" />
+        </div>
+      </fieldset>
+    </form>
+    <form>
+      <fieldset>
+        <legend>Previous N messages</legend>
+        <ul>
+          <li>todo-1..</li>
+          <li>todo-2..</li>
+        </ul>
+      </fieldset>
     </form>
   </body>
 	<script src="lightning-fs-3.3.6.min.js"></script>
-	<script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
-
-  <!-- Setup -->
-	<script>
-    var CORS_PROXY = "https://vercel-cors-proxy-pi.vercel.app";
-    var DIR = "/tutorial";
-    window.dir = DIR;
-    var REPO_BRANCH = "main";
-    var REPO_FILE = "README.md";
-    var REPO_URL = "https://git.opengamestudio.org/kornerr/study-gitjs-access";
-
-    async function checkIsomorphic() {
-      // Initialize isomorphic-git with a file system
-      // WIPE clean each run
-      window.fs = new LightningFS('fs', {wipe: true})
-      git.plugins.set('fs', window.fs)
-      window.pfs = window.fs.promises
-
-      console.log("01", DIR);
-      await pfs.mkdir(DIR);
-      console.log("02", DIR);
-      // Behold - it is empty!
-      var files = await pfs.readdir(DIR);
-      console.log("03 before:", files);
-
-      await git.clone({
-        dir: DIR,
-        corsProxy: CORS_PROXY,
-        url: REPO_URL,
-        ref: REPO_BRANCH,
-        singleBranch: true,
-        depth: 1
-      });
-
-      console.log("03.1");
-      // Now it should not be empty...
-      files = await pfs.readdir(DIR);
-      console.log("04 after:", files);
-      var logs = await git.log({dir: DIR});
-      console.log("05 logs:", logs);
-
-      // Write to a file.
-      var filePath = `${DIR}/${REPO_FILE}`;
-      console.log("filePath", filePath);
-      var contents = "This came from js. Now is: " + Date.now();
-      await pfs.writeFile(filePath, contents);
-
-      // Add.
-      await git.add({
-        dir: DIR,
-        filepath: REPO_FILE
-      });
-
-      // Commit.
-      await git.commit({
-        dir: DIR,
-        message: contents,
-        author: {
-          name: "GitJS",
-          email: "kornerr@gmail.com"
-        }
-      });
-
-      var logs = await git.log({dir: DIR});
-      console.log("06 logs:", logs);
-    }
-
-  </script>
-
-  <!-- Push -->
-  <script>
-    async function doPush() {
-      var usr = document.getElementById("username").value;
-      var pwd = document.getElementById("password").value;
-      console.log("push", usr);
-      var ret = await git.push({
-        dir: DIR,
-        username: usr,
-        password: pwd
-      });
-      console.log("push done:", ret);
-    };
-  </script>
-
+  <!--<script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>-->
+	<script src="isomorphic-git-0.70.7-unmin.js"></script>
+	<script src="constants.js"></script>
+	<script src="check.js"></script>
+	<script src="other.js"></script>
   <!-- Start -->
   <script>
-    checkIsomorphic()
+    async function runChat() {
+      const fs = await createFileSystem(FS_STORAGE_NAME);
+      window.pfs = fs;
+
+      var files = await fs.readdir("/");
+      console.log("01. Files:", files);
+
+      if (files.length == 0) {
+        console.log("02-1. Clone");
+        await clone(REPO_URL, REPO_BRANCH);
+      } else {
+        console.log("02-2. Pull");
+        await pull(REPO_URL, REPO_BRANCH);
+      }
+
+      files = await fs.readdir("/");
+      console.log("03. Files:", files);
+
+      var contents = ""
+      if (files.includes(FILE_CHAT_LOG)) {
+        contents = await fs.readFile(DIR + FILE_CHAT_LOG, {encoding: "utf8"});
+      }
+      console.log("04. Contents:", contents);
+    }
+
+    async function doSend() {
+      var fs = window.pfs;
+      console.log("doSend-01");
+      var contentsWas = await fs.readFile(DIR + FILE_CHAT_LOG, {encoding: "utf8"});
+      console.log("doSend-02");
+      var newMessage = document.getElementById("message").value;
+      console.log("doSend-03");
+      var contents = contentsWas + "\n" + newMessage;
+      console.log("doSend-04");
+      var enc = new TextEncoder().encode(contents);
+      console.log("doSend-05");
+      await fs.writeFile(DIR + FILE_CHAT_LOG, {encoding: "utf8"});
+      console.log("doSend-06");
+      window.dir = DIR;
+      await git.add({
+        dir,
+        filepath: FILE_CHAT_LOG,
+      });
+      console.log("doSend-07");
+      //await commit
+      //await push(REPO_URL, REPO_BRANCH);
+      console.log("doSend-08");
+    }
+
+    var auth = document.getElementById("auth");
+    auth.addEventListener("submit", function(e) {
+      e.preventDefault();
+      doSend();
+    });
+
+    runChat()
 	</script>
 </html>

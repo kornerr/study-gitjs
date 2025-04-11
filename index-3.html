@@ -1,0 +1,118 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Attempt 3</title>
+    <style>
+      #repo {
+        display: none;
+      }
+      #repo-div {
+        display: flex;
+      }
+      #repo-url {
+        flex: 1;
+        margin-right: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="repo">
+      <fieldset>
+        <legend>Select chat repository</legend>
+        <div id="repo-div">
+          <input id="repo-url" name="repo-url" type="text" placeholder="For example: https://git.opengamestudio.org/kornerr/study-gitjs-access"/>
+          <input id="repo-accept" type="submit" value="Accept" />
+        </div>
+      </fieldset>
+    </form>
+    <!-- Dependencies -->
+    <script src="lightning-fs-3.3.6.min.js"></script>
+    <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
+    <!-- Global entities and constants -->
+    <script>
+        window.fs = new LightningFS("STORAGE-attempt3");
+        git.plugins.set("fs", window.fs);
+        window.pfs = window.fs.promises;
+       
+        window.DIR_REL = "attempt3";
+        window.DIR = "/" + DIR_REL;
+        window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
+        window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
+    </script>
+    <!-- Global reusable functions -->
+    <script>
+        // Get element by id.
+        function deId(sid) {
+            return document.getElementById(sid);
+        }
+       
+        // Report error with an alert.
+        function reportError(title, err) {
+            alert(title + "\n\n" + err.name + ": " + err.message);
+        }
+       
+        // Remove files recursively.
+        async function rmFiles(files) {
+            for (var i in files) {
+                var f = files[i];
+                if (f.endsWith("/")) {
+                    await pfs.rmdir(f);
+                } else {
+                    await pfs.unlink(f);
+                }
+            }
+        }
+       
+        // List files recursively.
+        async function walkFiles(path, collection) {
+            var suffix = path == "/" ? "" : "/";
+            collection.push(path + suffix);
+            var files = await pfs.readdir(path)
+            for (var i in files) {
+                var f = files[i];
+                var fullPath = path + suffix + f;
+                var st = await pfs.stat(fullPath);
+                if (st.type == "dir") {
+                    await walkFiles(fullPath, collection);
+                } else {
+                    collection.push(fullPath);
+                }
+            }
+        }
+    </script>
+    <!-- Tasks -->
+    <script src="DoEnd.js"></script>
+    <script src="DoRequestRepo.js"></script>
+    <!-- Run tasks -->
+    <script>
+        var scheduledTasks = {};
+        function scheduleExec(id) {
+            console.log("ИГР scheduleE id:", id);
+            scheduledTasks[id] = true;
+            setTimeout(executeScheduledTasks, 50);
+        }
+        function executeScheduledTasks() {
+            var ids = Object.keys(scheduledTasks);
+            scheduledTasks = {};
+            console.log("ИГР executeST count:", ids.length);
+            for (var i in ids) {
+                var id = ids[i];
+                tasks[id].execute();
+            }
+        }
+        var tasks = [
+            new DoRequestRepo(
+                deId("repo"),
+                deId("repo-accept"),
+                deId("repo-url")
+            ),
+            new DoEnd(),
+        ];
+        for (const i in tasks) {
+            var task = tasks[i];
+            task.schedule = () => { scheduleExec(i); };
+            task.execute();
+        }
+    </script>
+  </body>
+</html>
