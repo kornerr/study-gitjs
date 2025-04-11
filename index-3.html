@@ -16,12 +16,22 @@
     </style>
   </head>
   <body>
+    <!-- Repository -->
     <form id="repo">
       <fieldset>
-        <legend>Select chat repository</legend>
+        <legend>Set notes repository</legend>
         <div id="repo-div">
           <input id="repo-url" name="repo-url" type="text" placeholder="For example: https://git.opengamestudio.org/kornerr/study-gitjs-access"/>
           <input id="repo-accept" type="submit" value="Accept" />
+        </div>
+      </fieldset>
+    </form>
+    <!-- Branch-->
+    <form id="branch">
+      <fieldset>
+        <legend>Select branch for this terminal</legend>
+        <div id="branch-div">
+          <input id="branch-accept" type="submit" value="Accept" />
         </div>
       </fieldset>
     </form>
@@ -83,6 +93,7 @@
     <!-- Tasks -->
     <script src="DoEnd.js"></script>
     <script src="DoRequestRepo.js"></script>
+    <script src="DoSelectBranch.js"></script>
     <!-- Run tasks -->
     <script>
         var scheduledTasks = {};
@@ -105,6 +116,10 @@
                 deId("repo"),
                 deId("repo-accept"),
                 deId("repo-url")
+            ),
+            new DoSelectBranch(
+                deId("branch"),
+                deId("branch-accept")
             ),
             new DoEnd(),
         ];
