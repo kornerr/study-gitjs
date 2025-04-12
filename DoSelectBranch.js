@@ -51,17 +51,21 @@ function DoSelectBranch(
     this.execute = async function() {
         await this.resetRootFiles();
         console.log("ИГР DoSB.execute");
-        /*
-        this.resetUIVisiblity();
-        */
         await this.listBranches();
+        this.resetUI();
     };
 
     this.resetRootFiles = async function() {
         this.rootFiles = await pfs.readdir("/");
     };
 
-    this.resetUIVisiblity = function() {
+    this.resetUI = function() {
+        var html = "";
+        for (var i in this.branches) {
+            var branch = this.branches[i];
+            html += FMT_BRANCH_BUTTON.replace("%ID%", `branch-$i`).replace("%VALUE%", branch);
+        }
+        elForm.innerHTML = html;
         /*
         var isVisible = !this.rootFiles.includes(DIR_REL);
         elForm.style.display = isVisible ? "block" : "none";
