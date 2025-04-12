@@ -3,7 +3,8 @@ function DoSelectBranch(
     elAccept
 ) {
     this._construct = function() {
-        this.doCheckout = false;
+        //this.doCheckout = false;
+        this.branches = [];
         this.elForm = elForm;
         this.elAccept = elAccept;
         this.rootFiles = [];
@@ -12,38 +13,37 @@ function DoSelectBranch(
         var self = this;
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
-            self.doCheckout = true;
+            //self.doCheckout = true;
             self.schedule();
         });
     };
     this._construct();
 
-    this.checkoutBranch = async function() {
-        var proceed = this.shouldProceedCheckout();
-        console.log("ИГР DoSB.checkoutB-00 proceed:", proceed);
+    this.listBranches = async function() {
+        var proceed = this.shouldProceedListingBranches();
+        console.log("ИГР DoSB.listB-00 proceed:", proceed);
         if (!proceed) {
-            console.log("ИГР DoSB.checkoutB-01.interrupt");
+            console.log("ИГР DoSB.listb-01.interrupt");
             return;
         }
-        this.doCheckout = false;
+        //this.doCheckout = false;
 
-        console.log("ИГР DoSB.checkoutB-02");
+        console.log("ИГР DoSB.listB-02");
         this.setLoading(true);
 
-        /*
         try {
-            await git.clone({
+            var brs = await git.listBranches({
                 dir: DIR,
                 corsProxy: PROXY,
-                url: this.elURL.value,
+                remote: "origin"
             });
-            this.schedule();
+            this.branches = brs.filter(br => br != "HEAD");
+            console.log("ИГР DoSB.listB-02.1 branches:", this.branches);
+            //this.schedule();
         } catch (e) {
-            this.eraseClone();
-            reportError(ERR_GIT_CLONE_FAILED, e);
+            reportError("DoSelectBranch?", e);
         }
-        console.log("ИГР DoRR.cloneR-03");
-        */
+        console.log("ИГР DoSB.listB-03");
 
         this.setLoading(false);
     };
@@ -53,8 +53,8 @@ function DoSelectBranch(
         console.log("ИГР DoSB.execute");
         /*
         this.resetUIVisiblity();
-        await this.checkoutBranch();
         */
+        await this.listBranches();
     };
 
     this.resetRootFiles = async function() {
@@ -73,8 +73,8 @@ function DoSelectBranch(
         this.elAccept.style.display = state ? "none" : "block";
     };
 
-    this.shouldProceedCheckout = function() {
+    this.shouldProceedListingBranches = function() {
         // TODO
-        return false;
+        return true;
     };
 }
