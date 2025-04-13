@@ -49,7 +49,8 @@
         window.DIR_REL = "attempt3";
         window.DIR = "/" + DIR_REL;
         window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
-        window.FMT_BRANCH_BUTTON = "<input type=\"radio\" name=\"branch\" id=\"%ID\" value =\"%VALUE%\"/><label for=\"%ID%\">%VALUE%</label>";
+        window.FILE_WRITE_BRANCH = "writeBranch";
+        window.FMT_BRANCH_BUTTON = "<input type=\"radio\" name=\"branch\" id=\"%ID%\" value =\"%VALUE%\"/><label for=\"%ID%\">%VALUE%</label>";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
@@ -122,6 +123,7 @@
             ),
             new DoSelectBranch(
                 deId("branch"),
+                deId("branch-div"),
                 deId("branch-accept")
             ),
             new DoEnd(),

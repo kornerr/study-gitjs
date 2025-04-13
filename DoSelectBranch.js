@@ -1,26 +1,30 @@
 function DoSelectBranch(
     elForm,
+    elSection,
     elAccept
 ) {
     this._construct = function() {
-        //this.doCheckout = false;
+        this.doSaveWriteBranch = false;
         this.branches = [];
         this.elForm = elForm;
+        this.elSeciton = elSection;
         this.elAccept = elAccept;
         this.rootFiles = [];
         this.schedule = null;
+        this.selectedWriteBranch = null;
 
         var self = this;
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
-            //self.doCheckout = true;
+            self.doSaveWriteBranch = true;
+            self.setSelectedWriteBranch();
             self.schedule();
         });
     };
     this._construct();
 
     this.listBranches = async function() {
-        var proceed = this.shouldProceedListingBranches();
+        var proceed = this.shouldListBranches();
         console.log("ИГР DoSB.listB-00 proceed:", proceed);
         if (!proceed) {
             console.log("ИГР DoSB.listb-01.interrupt");
@@ -34,7 +38,6 @@ function DoSelectBranch(
         try {
             var brs = await git.listBranches({
                 dir: DIR,
-                corsProxy: PROXY,
                 remote: "origin"
             });
             this.branches = brs.filter(br => br != "HEAD");
@@ -52,6 +55,7 @@ function DoSelectBranch(
         await this.resetRootFiles();
         console.log("ИГР DoSB.execute");
         await this.listBranches();
+        await this.saveWriteBranch();
         this.resetUI();
     };
 
@@ -63,22 +67,47 @@ function DoSelectBranch(
         var html = "";
         for (var i in this.branches) {
             var branch = this.branches[i];
-            html += FMT_BRANCH_BUTTON.replace("%ID%", `branch-$i`).replace("%VALUE%", branch);
+            var fmt = FMT_BRANCH_BUTTON.replaceAll("%ID%", `branch-${i}`).replaceAll("%VALUE%", branch);
+            html += fmt;
         }
-        elForm.innerHTML = html;
+        elSection.innerHTML = html;
         /*
         var isVisible = !this.rootFiles.includes(DIR_REL);
         elForm.style.display = isVisible ? "block" : "none";
         */
     };
 
+    this.saveWriteBranch = async function() {
+        var proceed = this.shouldSaveWriteBranch();
+        console.log("ИГР DoSB.saveWB-00 proceed:", proceed);
+        if (!proceed) {
+            return;
+        }
+        this.doSaveWriteBranch = false;
+        await pfs.writeFile("/" + FILE_WRITE_BRANCH, this.selectedWriteBranch , {encoding: "utf8"});
+    }
+
     this.setLoading = function(state) {
         // TODO
         this.elAccept.style.display = state ? "none" : "block";
     };
 
-    this.shouldProceedListingBranches = function() {
-        // TODO
-        return true;
+    self.setSelectedWriteBranch = function() {
+        var radios = document.quearySelectorAll("input[name='branch']");
+        for (var i in radios) {
+            var radio = radios[i];
+            if (radio.checked) {
+              self.writeBranch = radio.value;
+            }
+        }
+    }
+
+    this.shouldListBranches = function() {
+        var targetFileIsPresent = this.rootFiles.includes(FILE_WRITE_BRANCH);
+        return !targetFileIsPresent;
+    };
+
+    this.shouldSaveWriteBranch = function() {
+        return self.saveWriteBranch;
     };
 }
