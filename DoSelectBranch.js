@@ -4,60 +4,75 @@ function DoSelectBranch(
     elAccept
 ) {
     this._construct = function() {
-        this.doSaveWriteBranch = false;
+        this.activeBranch = null;
+        this.doCheckoutBranch = null;
         this.branches = [];
         this.elForm = elForm;
         this.elSection = elSection;
         this.elAccept = elAccept;
         this.rootFiles = [];
         this.schedule = null;
-        this.selectedWriteBranch = null;
 
         var self = this;
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
-            self.doSaveWriteBranch = true;
-            self.selectWriteBranch();
+            self.doCheckoutBranch = self.selectedBranch();
             self.schedule();
         });
     };
     this._construct();
 
-    this.listBranches = async function() {
-        var proceed = this.shouldListBranches();
-        console.log("ИГР DoSB.listB-00 proceed:", proceed);
+    this.checkoutBranch = async function() {
+        var proceed = this.shouldCheckoutBranch();
+        console.log("ИГР DoSB.checkoutB-00 proceed:", proceed);
         if (!proceed) {
-            console.log("ИГР DoSB.listB-01.interrupt");
+            console.log("ИГР DoSB.checkoutB-01.interrupt");
             return;
         }
-        //this.doCheckout = false;
+        this.doCheckoutBranch = false;
 
-        console.log("ИГР DoSB.listB-02");
+        console.log("ИГР DoSB.checkoutB-02");
         this.setLoading(true);
+        // TODO CHECKOUT
+        this.setLoading(false);
+    };
 
+    this.collectBranches = async function() {
         try {
             var brs = await git.listBranches({
                 dir: DIR,
                 remote: "origin"
             });
             this.branches = brs.filter(br => br != "HEAD");
-            console.log("ИГР DoSB.listB-02.1 branches:", this.branches);
+            console.log("ИГР DoSB.collectB-01 branches:", this.branches);
             //this.schedule();
         } catch (e) {
-            reportError("DoSelectBranch?", e);
+            reportError("doSB?.collectB-02", e);
         }
-        console.log("ИГР DoSB.listB-03");
-
-        this.setLoading(false);
     };
 
     this.execute = async function() {
-        await this.resetRootFiles();
         console.log("ИГР DoSB.execute");
-        await this.listBranches();
-        await this.saveWriteBranch();
+        await this.resetRootFiles();
+        await this.checkoutBranch();
+        await this.collectBranches();
+        await this.resetActiveBranch();
         this.resetUI();
     };
+
+    this.resetActiveBranch = async function() {
+        try {
+            var br = await git.currentBranch({
+                dir: DIR,
+                fullname: false,
+            });
+            this.activeBranch = br;
+            console.log("ИГР DoSB.resetAB-01 activeB:", this.activeBranch);
+            //this.schedule();
+        } catch (e) {
+            reportError("doSB?.resetAB-02", e);
+        }
+    }
 
     this.resetRootFiles = async function() {
         this.rootFiles = await pfs.readdir("/");
@@ -71,20 +86,17 @@ function DoSelectBranch(
             html += fmt;
         }
         this.elSection.innerHTML = html;
-        /*
-        var isVisible = !this.rootFiles.includes(DIR_REL);
-        elForm.style.display = isVisible ? "block" : "none";
-        */
     };
 
-    this.saveWriteBranch = async function() {
-        var proceed = this.shouldSaveWriteBranch();
-        console.log("ИГР DoSB.saveWB-00 proceed:", proceed);
-        if (!proceed) {
-            return;
+    this.selectedBranch = function() {
+        var radios = document.querySelectorAll("input[name='branch']");
+        for (var i in radios) {
+            var radio = radios[i];
+            if (radio.checked) {
+              return radio.value;
+            }
         }
-        this.doSaveWriteBranch = false;
-        await pfs.writeFile("/" + FILE_WRITE_BRANCH, this.selectedWriteBranch , {encoding: "utf8"});
+        return null
     }
 
     this.setLoading = function(state) {
@@ -92,25 +104,11 @@ function DoSelectBranch(
         this.elAccept.style.display = state ? "none" : "block";
     };
 
-    this.selectWriteBranch = function() {
-        console.log("ИГР DoSB.selectWB");
+    this.shouldCheckoutBranch = function() {
+        return this.doCheckoutBranch;
         /*
-        var radios = document.quearySelectorAll("input[name='branch']");
-        for (var i in radios) {
-            var radio = radios[i];
-            if (radio.checked) {
-              self.writeBranch = radio.value;
-            }
-        }
-        */
-    }
-
-    this.shouldListBranches = function() {
         var targetFileIsPresent = this.rootFiles.includes(FILE_WRITE_BRANCH);
         return !targetFileIsPresent;
-    };
-
-    this.shouldSaveWriteBranch = function() {
-        return self.doSaveWriteBranch;
+        */
     };
 }
