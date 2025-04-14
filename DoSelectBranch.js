@@ -7,7 +7,7 @@ function DoSelectBranch(
         this.doSaveWriteBranch = false;
         this.branches = [];
         this.elForm = elForm;
-        this.elSeciton = elSection;
+        this.elSection = elSection;
         this.elAccept = elAccept;
         this.rootFiles = [];
         this.schedule = null;
@@ -17,7 +17,7 @@ function DoSelectBranch(
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
             self.doSaveWriteBranch = true;
-            self.setSelectedWriteBranch();
+            self.selectWriteBranch();
             self.schedule();
         });
     };
@@ -27,7 +27,7 @@ function DoSelectBranch(
         var proceed = this.shouldListBranches();
         console.log("ИГР DoSB.listB-00 proceed:", proceed);
         if (!proceed) {
-            console.log("ИГР DoSB.listb-01.interrupt");
+            console.log("ИГР DoSB.listB-01.interrupt");
             return;
         }
         //this.doCheckout = false;
@@ -70,7 +70,7 @@ function DoSelectBranch(
             var fmt = FMT_BRANCH_BUTTON.replaceAll("%ID%", `branch-${i}`).replaceAll("%VALUE%", branch);
             html += fmt;
         }
-        elSection.innerHTML = html;
+        this.elSection.innerHTML = html;
         /*
         var isVisible = !this.rootFiles.includes(DIR_REL);
         elForm.style.display = isVisible ? "block" : "none";
@@ -92,7 +92,9 @@ function DoSelectBranch(
         this.elAccept.style.display = state ? "none" : "block";
     };
 
-    self.setSelectedWriteBranch = function() {
+    this.selectWriteBranch = function() {
+        console.log("ИГР DoSB.selectWB");
+        /*
         var radios = document.quearySelectorAll("input[name='branch']");
         for (var i in radios) {
             var radio = radios[i];
@@ -100,6 +102,7 @@ function DoSelectBranch(
               self.writeBranch = radio.value;
             }
         }
+        */
     }
 
     this.shouldListBranches = function() {
@@ -108,6 +111,6 @@ function DoSelectBranch(
     };
 
     this.shouldSaveWriteBranch = function() {
-        return self.saveWriteBranch;
+        return self.doSaveWriteBranch;
     };
 }
