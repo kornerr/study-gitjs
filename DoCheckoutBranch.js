@@ -10,6 +10,7 @@ function DoCheckoutBranch(
         this.elForm = elForm;
         this.elSection = elSection;
         this.elAccept = elAccept;
+        this.isVisible = true;
         this.rootFiles = [];
         this.schedule = null;
 
@@ -46,6 +47,10 @@ function DoCheckoutBranch(
     };
 
     this.collectBranches = async function() {
+        if (!this.isVisible) {
+            return;
+        }
+
         try {
             var brs = await git.listBranches({
                 dir: DIR,
@@ -62,6 +67,7 @@ function DoCheckoutBranch(
     this.execute = async function() {
         console.log("ИГР DoSB.execute");
         await this.resetRootFiles();
+        this.resetUIVisibility();
         await this.checkoutBranch();
         await this.collectBranches();
         await this.resetActiveBranch();
@@ -69,6 +75,10 @@ function DoCheckoutBranch(
     };
 
     this.resetActiveBranch = async function() {
+        if (!this.isVisible) {
+            return;
+        }
+
         try {
             var br = await git.currentBranch({
                 dir: DIR,
@@ -99,6 +109,11 @@ function DoCheckoutBranch(
             html += fmt;
         }
         this.elSection.innerHTML = html;
+    };
+
+    this.resetUIVisibility = function() {
+        this.isVisible = this.rootFiles.includes(DIR_REL);
+        this.elForm.style.display = this.isVisible ? "block" : "none";
     };
 
     this.selectedFormBranch = function() {
