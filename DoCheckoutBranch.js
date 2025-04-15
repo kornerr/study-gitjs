@@ -29,11 +29,19 @@ function DoCheckoutBranch(
             console.log("ИГР DoSB.checkoutB-01.interrupt");
             return;
         }
-        this.doCheckoutBranch = false;
 
         console.log("ИГР DoSB.checkoutB-02");
         this.setLoading(true);
-        // TODO CHECKOUT
+        try {
+            await git.checkout({
+                dir: DIR,
+                ref: this.doCheckoutBranch,
+            });
+            this.schedule();
+        } catch (e) {
+            reportError(ERR_GIT_CHECKOUT_FAILED, e);
+        }
+        this.doCheckoutBranch = null;
         this.setLoading(false);
     };
 
@@ -105,15 +113,14 @@ function DoCheckoutBranch(
     };
 
     this.setLoading = function(state) {
-        // TODO
-        this.elAccept.style.display = state ? "none" : "block";
+        if (state) {
+            this.elAccept.setAttribute("disabled", "true");
+        } else {
+            this.elAccept.removeAttribute("disabled");
+        }
     };
 
     this.shouldCheckoutBranch = function() {
-        return this.doCheckoutBranch;
-        /*
-        var targetFileIsPresent = this.rootFiles.includes(FILE_WRITE_BRANCH);
-        return !targetFileIsPresent;
-        */
+        return this.doCheckoutBranch != null;
     };
 }
