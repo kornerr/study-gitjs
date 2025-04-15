@@ -33,7 +33,7 @@
         <div id="branch-div">
         </div>
         <div>
-          <input id="branch-accept" type="submit" value="Accept" />
+          <input id="branch-accept" type="submit" value="Checkout" />
         </div>
       </fieldset>
     </form>
@@ -49,8 +49,7 @@
         window.DIR_REL = "attempt3";
         window.DIR = "/" + DIR_REL;
         window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
-        window.FILE_WRITE_BRANCH = "writeBranch";
-        window.FMT_BRANCH_BUTTON = "<input type=\"radio\" name=\"branch\" id=\"%ID%\" value =\"%VALUE%\"/><label for=\"%ID%\">%VALUE%</label>";
+        window.FMT_BRANCH_BUTTON = "<input type=\"radio\" name=\"branch\" id=\"%ID%\" value =\"%VALUE%\" %CHECKED%/><label for=\"%ID%\">%VALUE%</label>";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->

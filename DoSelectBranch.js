@@ -82,7 +82,12 @@ function DoSelectBranch(
         var html = "";
         for (var i in this.branches) {
             var branch = this.branches[i];
-            var fmt = FMT_BRANCH_BUTTON.replaceAll("%ID%", `branch-${i}`).replaceAll("%VALUE%", branch);
+            var isActive = (branch == this.activeBranch);
+            var checked = isActive ? "checked" : "";
+            var fmt = FMT_BRANCH_BUTTON
+                .replaceAll("%ID%", `branch-${i}`)
+                .replaceAll("%VALUE%", branch)
+                .replaceAll("%CHECKED%", checked);
             html += fmt;
         }
         this.elSection.innerHTML = html;
