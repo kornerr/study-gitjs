@@ -94,9 +94,9 @@
         }
     </script>
     <!-- Tasks -->
+    <script src="DoCheckoutBranch.js"></script>
     <script src="DoEnd.js"></script>
     <script src="DoRequestRepo.js"></script>
-    <script src="DoSelectBranch.js"></script>
     <!-- Run tasks -->
     <script>
         var scheduledTasks = {};
@@ -115,17 +115,17 @@
             }
         }
         var tasks = [
-            new DoRequestRepo(
-                deId("repo"),
-                deId("repo-accept"),
-                deId("repo-url")
-            ),
-            new DoSelectBranch(
+            new DoCheckoutBranch(
                 deId("branch"),
                 deId("branch-div"),
                 deId("branch-accept")
             ),
             new DoEnd(),
+            new DoRequestRepo(
+                deId("repo"),
+                deId("repo-accept"),
+                deId("repo-url")
+            ),
         ];
         for (const i in tasks) {
             var task = tasks[i];

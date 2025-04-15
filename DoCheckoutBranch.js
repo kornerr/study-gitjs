@@ -1,4 +1,4 @@
-function DoSelectBranch(
+function DoCheckoutBranch(
     elForm,
     elSection,
     elAccept
@@ -16,7 +16,7 @@ function DoSelectBranch(
         var self = this;
         this.elForm.addEventListener("submit", function(e) {
             e.preventDefault();
-            self.doCheckoutBranch = self.selectedBranch();
+            self.doCheckoutBranch = self.selectedFormBranch();
             self.schedule();
         });
     };
@@ -72,7 +72,7 @@ function DoSelectBranch(
         } catch (e) {
             reportError("doSB?.resetAB-02", e);
         }
-    }
+    };
 
     this.resetRootFiles = async function() {
         this.rootFiles = await pfs.readdir("/");
@@ -93,16 +93,16 @@ function DoSelectBranch(
         this.elSection.innerHTML = html;
     };
 
-    this.selectedBranch = function() {
+    this.selectedFormBranch = function() {
         var radios = document.querySelectorAll("input[name='branch']");
         for (var i in radios) {
             var radio = radios[i];
             if (radio.checked) {
-              return radio.value;
+                return radio.value;
             }
         }
         return null
-    }
+    };
 
     this.setLoading = function(state) {
         // TODO
