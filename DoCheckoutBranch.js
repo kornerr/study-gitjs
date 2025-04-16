@@ -102,10 +102,10 @@ function DoCheckoutBranch(
             var branch = this.branches[i];
             var isActive = (branch == this.activeBranch);
             var selected = isActive ? "selected" : "";
-            var fmt = FMT_BRANCH_BUTTON
+            var fmt = FMT_BRANCH_OPTION
                 .replaceAll("%ID%", `branch-${i}`)
                 .replaceAll("%VALUE%", branch)
-                .replaceAll("%CHECKED%", selected);
+                .replaceAll("%SELECTED%", selected);
             html += fmt;
         }
         this.elSection.innerHTML = html;
@@ -118,16 +118,6 @@ function DoCheckoutBranch(
 
     this.selectedFormBranch = function() {
         return deId("branch-div").value;
-        /*
-        el.options[el.selectedIndex].
-        var options = document.querySelectorAll("option[name='branch']");
-        for (var i in options) {
-            var option = options[i];
-            if (option.selected) {
-                return option.value;
-            }
-        }
-        */
         return null
     };
 
