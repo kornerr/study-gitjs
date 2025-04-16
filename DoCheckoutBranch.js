@@ -58,7 +58,6 @@ function DoCheckoutBranch(
             });
             this.branches = brs.filter(br => br != "HEAD");
             console.log("ИГР DoSB.collectB-01 branches:", this.branches);
-            //this.schedule();
         } catch (e) {
             reportError("doSB?.collectB-02", e);
         }
