@@ -16,13 +16,23 @@
     </style>
   </head>
   <body>
+    <!-- Repository -->
     <form id="repo">
       <fieldset>
-        <legend>Select chat repository</legend>
+        <legend>Set notes repository</legend>
         <div id="repo-div">
           <input id="repo-url" name="repo-url" type="text" placeholder="For example: https://git.opengamestudio.org/kornerr/study-gitjs-access"/>
           <input id="repo-accept" type="submit" value="Accept" />
         </div>
+      </fieldset>
+    </form>
+    <!-- Branch-->
+    <form id="branch">
+      <fieldset>
+        <legend>Change write branch</legend>
+        <select id="branch-div">
+        </select>
+        <input id="branch-accept" type="submit" value="Checkout" />
       </fieldset>
     </form>
     <!-- Dependencies -->
@@ -36,7 +46,9 @@
        
         window.DIR_REL = "attempt3";
         window.DIR = "/" + DIR_REL;
+        window.ERR_GIT_CHECKOUT_FAILED = "Failed to checkout the branch";
         window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
+        window.FMT_BRANCH_OPTION = "<option id=\"%ID%\" value =\"%VALUE%\" %SELECTED%/>%VALUE%</option>";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
@@ -81,16 +93,32 @@
         }
     </script>
     <!-- Tasks -->
+    <script src="DoCheckoutBranch.js"></script>
+    <script src="DoCloneRepository.js"></script>
     <script src="DoEnd.js"></script>
-    <script src="DoRequestRepo.js"></script>
     <!-- Run tasks -->
     <script>
-        var scheduledTasks = {};
+        var tasks = [
+            new DoCheckoutBranch(
+                deId("branch"),
+                deId("branch-div"),
+                deId("branch-accept")
+            ),
+            new DoCloneRepository(
+                deId("repo"),
+                deId("repo-accept"),
+                deId("repo-url")
+            ),
+            new DoEnd(),
+        ];
+        //var scheduledTasks = {};
         function scheduleExec(id) {
             console.log("ИГР scheduleE id:", id);
-            scheduledTasks[id] = true;
-            setTimeout(executeScheduledTasks, 50);
+            //scheduledTasks[id] = true;
+            //setTimeout(executeScheduledTasks, 50);
+            setTimeout(executeTasks, 50);
         }
+        /*
         function executeScheduledTasks() {
             var ids = Object.keys(scheduledTasks);
             scheduledTasks = {};
@@ -100,19 +128,15 @@
                 tasks[id].execute();
             }
         }
-        var tasks = [
-            new DoRequestRepo(
-                deId("repo"),
-                deId("repo-accept"),
-                deId("repo-url")
-            ),
-            new DoEnd(),
-        ];
-        for (const i in tasks) {
-            var task = tasks[i];
-            task.schedule = () => { scheduleExec(i); };
-            task.execute();
+        */
+        function executeTasks() {
+            for (const i in tasks) {
+                var task = tasks[i];
+                task.schedule = () => { scheduleExec(i); };
+                task.execute();
+            }
         }
+        executeTasks();
     </script>
   </body>
 </html>
