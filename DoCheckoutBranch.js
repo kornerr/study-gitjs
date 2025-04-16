@@ -85,7 +85,6 @@ function DoCheckoutBranch(
             });
             this.activeBranch = br;
             console.log("ИГР DoSB.resetAB-01 activeB:", this.activeBranch);
-            //this.schedule();
         } catch (e) {
             reportError("doSB?.resetAB-02", e);
         }
