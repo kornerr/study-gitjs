@@ -100,21 +100,6 @@
     <script src="DoEnd.js"></script>
     <!-- Run tasks -->
     <script>
-        var scheduledTasks = {};
-        function scheduleExec(id) {
-            console.log("ИГР scheduleE id:", id);
-            scheduledTasks[id] = true;
-            setTimeout(executeScheduledTasks, 50);
-        }
-        function executeScheduledTasks() {
-            var ids = Object.keys(scheduledTasks);
-            scheduledTasks = {};
-            console.log("ИГР executeST count:", ids.length);
-            for (var i in ids) {
-                var id = ids[i];
-                tasks[id].execute();
-            }
-        }
         var tasks = [
             new DoCheckoutBranch(
                 deId("branch"),
@@ -128,11 +113,32 @@
             ),
             new DoEnd(),
         ];
-        for (const i in tasks) {
-            var task = tasks[i];
-            task.schedule = () => { scheduleExec(i); };
-            task.execute();
+        //var scheduledTasks = {};
+        function scheduleExec(id) {
+            console.log("ИГР scheduleE id:", id);
+            //scheduledTasks[id] = true;
+            //setTimeout(executeScheduledTasks, 50);
+            setTimeout(executeTasks, 50);
         }
+        /*
+        function executeScheduledTasks() {
+            var ids = Object.keys(scheduledTasks);
+            scheduledTasks = {};
+            console.log("ИГР executeST count:", ids.length);
+            for (var i in ids) {
+                var id = ids[i];
+                tasks[id].execute();
+            }
+        }
+        */
+        function executeTasks() {
+            for (const i in tasks) {
+                var task = tasks[i];
+                task.schedule = () => { scheduleExec(i); };
+                task.execute();
+            }
+        }
+        executeTasks();
     </script>
   </body>
 </html>
