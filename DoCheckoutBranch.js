@@ -101,11 +101,11 @@ function DoCheckoutBranch(
         for (var i in this.branches) {
             var branch = this.branches[i];
             var isActive = (branch == this.activeBranch);
-            var checked = isActive ? "checked" : "";
+            var selected = isActive ? "selected" : "";
             var fmt = FMT_BRANCH_BUTTON
                 .replaceAll("%ID%", `branch-${i}`)
                 .replaceAll("%VALUE%", branch)
-                .replaceAll("%CHECKED%", checked);
+                .replaceAll("%CHECKED%", selected);
             html += fmt;
         }
         this.elSection.innerHTML = html;
@@ -117,13 +117,17 @@ function DoCheckoutBranch(
     };
 
     this.selectedFormBranch = function() {
-        var radios = document.querySelectorAll("input[name='branch']");
-        for (var i in radios) {
-            var radio = radios[i];
-            if (radio.checked) {
-                return radio.value;
+        return deId("branch-div").value;
+        /*
+        el.options[el.selectedIndex].
+        var options = document.querySelectorAll("option[name='branch']");
+        for (var i in options) {
+            var option = options[i];
+            if (option.selected) {
+                return option.value;
             }
         }
+        */
         return null
     };
 

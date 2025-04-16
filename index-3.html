@@ -29,12 +29,10 @@
     <!-- Branch-->
     <form id="branch">
       <fieldset>
-        <legend>Select write branch</legend>
-        <div id="branch-div">
-        </div>
-        <div>
-          <input id="branch-accept" type="submit" value="Checkout" />
-        </div>
+        <legend>Change write branch</legend>
+        <select id="branch-div">
+        </select>
+        <input id="branch-accept" type="submit" value="Checkout" />
       </fieldset>
     </form>
     <!-- Dependencies -->
@@ -50,7 +48,8 @@
         window.DIR = "/" + DIR_REL;
         window.ERR_GIT_CHECKOUT_FAILED = "Failed to checkout the branch";
         window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
-        window.FMT_BRANCH_BUTTON = "<input type=\"radio\" name=\"branch\" id=\"%ID%\" value =\"%VALUE%\" %CHECKED%/><label for=\"%ID%\">%VALUE%</label>";
+        //window.FMT_BRANCH_BUTTON = "<input type=\"radio\" name=\"branch\" id=\"%ID%\" value =\"%VALUE%\" %CHECKED%/><label for=\"%ID%\">%VALUE%</label>";
+        window.FMT_BRANCH_BUTTON = "<option id=\"%ID%\" value =\"%VALUE%\" %CHECKED%/>%VALUE%</option>";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
