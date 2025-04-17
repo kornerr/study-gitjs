@@ -95,7 +95,7 @@
     <!-- Tasks -->
     <script src="DoCheckoutBranch.js"></script>
     <script src="DoCloneRepository.js"></script>
-    <script src="DoEnd.js"></script>
+    <script src="DoPrintNotes.js"></script>
     <!-- Run tasks -->
     <script>
         var tasks = [
@@ -109,34 +109,20 @@
                 deId("repo-accept"),
                 deId("repo-url")
             ),
-            new DoEnd(),
+            new DoPrintNotes(),
         ];
-        //var scheduledTasks = {};
-        function scheduleExec(id) {
-            console.log("ИГР scheduleE id:", id);
-            //scheduledTasks[id] = true;
-            //setTimeout(executeScheduledTasks, 50);
-            setTimeout(executeTasks, 50);
+        function scheduleExec() {
+            console.log("ИГР scheduleE")
+            setTimeout(execTasks, 50);
         }
-        /*
-        function executeScheduledTasks() {
-            var ids = Object.keys(scheduledTasks);
-            scheduledTasks = {};
-            console.log("ИГР executeST count:", ids.length);
-            for (var i in ids) {
-                var id = ids[i];
-                tasks[id].execute();
-            }
-        }
-        */
-        function executeTasks() {
+        function execTasks() {
             for (const i in tasks) {
                 var task = tasks[i];
-                task.schedule = () => { scheduleExec(i); };
+                task.schedule = scheduleExec;
                 task.execute();
             }
         }
-        executeTasks();
+        execTasks();
     </script>
   </body>
 </html>
