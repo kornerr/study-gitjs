@@ -6,6 +6,9 @@
       #repo {
         display: none;
       }
+      #notes {
+        display: none;
+      }
       #repo-div {
         display: flex;
       }
@@ -33,6 +36,14 @@
         <select id="branch-div">
         </select>
         <input id="branch-accept" type="submit" value="Checkout" />
+      </fieldset>
+    </form>
+    <!-- Notes -->
+    <form id="notes">
+      <fieldset>
+        <legend>Notes:</legend>
+        <div id="notes-div">
+        </div>
       </fieldset>
     </form>
     <!-- Dependencies -->
@@ -99,6 +110,7 @@
     <!-- Tasks -->
     <script src="DoCheckoutBranch.js"></script>
     <script src="DoCloneRepository.js"></script>
+    <script src="DoDisplayNotes.js"></script>
     <script src="DoPrintNotes.js"></script>
     <!-- Run tasks -->
     <script>
@@ -112,6 +124,10 @@
                 deId("repo"),
                 deId("repo-accept"),
                 deId("repo-url")
+            ),
+            new DoDisplayNotes(
+                deId("notes"),
+                deId("notes-div"),
             ),
             new DoPrintNotes(),
         ];
