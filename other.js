@@ -1,3 +1,28 @@
+// https://stackoverflow.com/a/1353711/3404710
+function isDate(dt) {
+    return dt instanceof Date && !isNaN(dt);
+}
+
+function parseNotes(content) {
+    var items = [];
+    var lines = content.split("\n");
+    var currentItem = new Note();
+    for (var i in lines) {
+        var ln = lines[i];
+        console.log("Line", ln);
+        var dt = new Date(ln);
+        // Date
+        if (isDate(dt)) {
+            currentItem.date = dt;
+            console.log("note:", currentItem);
+        }
+        // Id...
+        // Text...
+        console.log("dt:", dt);
+    }
+}
+
+/*
 async function add(path) {
   return await git.add({
     dir: DIR,
@@ -41,3 +66,4 @@ async function push(url, branch) {
     singleBranch: true,
   });
 }
+*/

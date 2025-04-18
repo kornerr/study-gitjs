@@ -18,7 +18,8 @@ function DoDisplayNotes(
         if (files.includes(FILE_LOG_REL)) {
             contentLog = await pfs.readFile(FILE_LOG, {encoding: "utf8"});
         }
-        console.log("ИГР DoDN.displayN-3 log:", contentLog);
+        var notes = parseNotes(contentLog);
+        console.log("ИГР DoDN.displayN-2 notes:", notes);
     };
 
     this.execute = async function() {
