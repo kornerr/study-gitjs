@@ -11,15 +11,40 @@ function parseNotes(content) {
         var ln = lines[i];
         console.log("Line", ln);
         var dt = new Date(ln);
-        // Date
-        if (isDate(dt)) {
+        if (
+            currentItem.date == null &&
+            isDate(dt)
+        ) {
+            // First date
             currentItem.date = dt;
-            console.log("note:", currentItem);
+        } else if (
+            currentItem.date != null &&
+            isDate(dt)
+        ) {
+            // Second date. Add item.
+            items.push(currentItem);
+            currentItem = new Note();
+            currentItem.date = dt;
+        } else if (
+            // Id
+            currentItem.date != null &&
+            currentItem.id == null
+        ) {
+            currentItem.id = ln;
+        } else if (
+            // Text
+            currentItem.id != null &&
+            !isDate(dt)
+        ) {
+            currentItem.text += ln;
         }
-        // Id...
-        // Text...
-        console.log("dt:", dt);
     }
+    // Last item.
+    if (currentItem.date != null) {
+       items.push(currentItem);
+    }
+
+    return items;
 }
 
 /*
