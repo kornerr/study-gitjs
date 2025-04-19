@@ -6,6 +6,9 @@ function DoPrintNotes() {
     this._construct();
 
     this.printNotes = async function() {
+        if (!this.rootFiles.includes(DIR_REL)) {
+            return;
+        }
         console.log("ИГР DoPN.printN-1")
         var files = await pfs.readdir(DIR);
 

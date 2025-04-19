@@ -11,6 +11,9 @@ function DoDisplayNotes(
     this._construct();
 
     this.displayNotes = async function() {
+        if (!this.rootFiles.includes(DIR_REL)) {
+            return;
+        }
         console.log("ИГР DoDN.displayN-1")
         var files = await pfs.readdir(DIR);
 
