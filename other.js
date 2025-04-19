@@ -32,11 +32,19 @@ function parseNotes(content) {
         ) {
             currentItem.id = ln;
         } else if (
-            // Text
+            // First text
             currentItem.id != null &&
+            currentItem.text == null &&
             !isDate(dt)
         ) {
-            currentItem.text += ln;
+            currentItem.text = ln;
+        } else if (
+            // Second text
+            currentItem.id != null &&
+            currentItem.text != null &&
+            !isDate(dt)
+        ) {
+            currentItem.text += "\n" + ln;
         }
     }
     // Last item.
