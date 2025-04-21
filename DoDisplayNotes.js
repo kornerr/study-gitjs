@@ -23,6 +23,14 @@ function DoDisplayNotes(
         }
         var notes = parseNotes(contentLog);
         console.log("ИГР DoDN.displayN-2 notes:", notes);
+        var html = "";
+        for (var i in notes) {
+            var n = notes[i];
+            html += FMT_NOTE
+                .replaceAll("%DATE%", note.date)
+                .replaceAll("%TEXT%", note.text);
+        }
+        this.elSection.innerHTML = html;
     };
 
     this.execute = async function() {

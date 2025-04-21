@@ -16,6 +16,9 @@
         flex: 1;
         margin-right: 1em;
       }
+      .note {
+        border: 1px;
+      }
     </style>
   </head>
   <body>
@@ -64,6 +67,12 @@
         window.FILE_LOG_REL = "notes.log";
         window.FILE_LOG = DIR + "/" + FILE_LOG_REL;
         window.FMT_BRANCH_OPTION = "<option id=\"%ID%\" value =\"%VALUE%\" %SELECTED%/>%VALUE%</option>";
+        window.FMT_NOTE = `
+<div class=\"note\">
+    <p>%DATE%</p>
+    <h1>%TEXT%</h1>
+</div>
+`;
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
