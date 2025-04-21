@@ -27,8 +27,8 @@ function DoDisplayNotes(
         for (var i in notes) {
             var n = notes[i];
             html += FMT_NOTE
-                .replaceAll("%DATE%", note.date)
-                .replaceAll("%TEXT%", note.text);
+                .replaceAll("%DATE%", n.date)
+                .replaceAll("%TEXT%", n.text);
         }
         this.elSection.innerHTML = html;
     };
