@@ -9,7 +9,6 @@ function parseNotes(content) {
     var currentItem = new Note();
     for (var i in lines) {
         var ln = lines[i];
-        console.log("Line", ln);
         var dt = new Date(ln);
         if (
             currentItem.date == null &&
