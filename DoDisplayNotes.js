@@ -27,10 +27,11 @@ function DoDisplayNotes(
         for (var i in notes) {
             var n = notes[i];
             html += FMT_NOTE
-                .replaceAll("%DATE%", n.date)
+                .replaceAll("%DATE%", formatDate(n.date))
                 .replaceAll("%TEXT%", n.text);
         }
         this.elSection.innerHTML = html;
+        this.elForm.style.display = "block";
     };
 
     this.execute = async function() {

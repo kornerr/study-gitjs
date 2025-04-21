@@ -1,3 +1,13 @@
+
+function formatDate(dt) {
+    var year = dt.getFullYear();
+    var mon = String(dt.getMonth() + 1).padStart(2, "0");
+    var day = String(dt.getDate()).padStart(2, "0");
+    var h = String(dt.getHours()).padStart(2, "0");
+    var min = String(dt.getMinutes()).padStart(2, "0");
+    return `${year}-${mon}-${day} ${h}:${min}`;
+}
+
 // https://stackoverflow.com/a/1353711/3404710
 function isDate(dt) {
     return dt instanceof Date && !isNaN(dt);
