@@ -6,12 +6,20 @@
       #repo {
         display: none;
       }
+      #notes {
+        display: none;
+      }
       #repo-div {
         display: flex;
       }
       #repo-url {
         flex: 1;
         margin-right: 1em;
+      }
+      .note {
+        border: 1px solid lightgrey;
+        padding: 8px;
+        margin-bottom: 8px;
       }
     </style>
   </head>
@@ -35,6 +43,14 @@
         <input id="branch-accept" type="submit" value="Checkout" />
       </fieldset>
     </form>
+    <!-- Notes -->
+    <form id="notes">
+      <fieldset>
+        <legend>Notes:</legend>
+        <div id="notes-div">
+        </div>
+      </fieldset>
+    </form>
     <!-- Dependencies -->
     <script src="lightning-fs-3.3.6.min.js"></script>
     <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
@@ -48,7 +64,17 @@
         window.DIR = "/" + DIR_REL;
         window.ERR_GIT_CHECKOUT_FAILED = "Failed to checkout the branch";
         window.ERR_GIT_CLONE_FAILED = "Failed to clone repository";
+        window.FILE_CONFIG_REL = "notes.config";
+        window.FILE_CONFIG = DIR + "/" + FILE_CONFIG_REL;
+        window.FILE_LOG_REL = "notes.log";
+        window.FILE_LOG = DIR + "/" + FILE_LOG_REL;
         window.FMT_BRANCH_OPTION = "<option id=\"%ID%\" value =\"%VALUE%\" %SELECTED%/>%VALUE%</option>";
+        window.FMT_NOTE = `
+<div class=\"note\">
+    <p>%DATE%</p>
+    <h1>%TEXT%</h1>
+</div>
+`;
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
     <!-- Global reusable functions -->
@@ -95,7 +121,10 @@
     <!-- Tasks -->
     <script src="DoCheckoutBranch.js"></script>
     <script src="DoCloneRepository.js"></script>
-    <script src="DoEnd.js"></script>
+    <script src="DoDisplayNotes.js"></script>
+    <script src="DoPrintNotes.js"></script>
+    <script src="Note.js"></script>
+    <script src="other.js"></script>
     <!-- Run tasks -->
     <script>
         var tasks = [
@@ -109,34 +138,24 @@
                 deId("repo-accept"),
                 deId("repo-url")
             ),
-            new DoEnd(),
+            new DoDisplayNotes(
+                deId("notes"),
+                deId("notes-div"),
+            ),
+            new DoPrintNotes(),
         ];
-        //var scheduledTasks = {};
-        function scheduleExec(id) {
-            console.log("ИГР scheduleE id:", id);
-            //scheduledTasks[id] = true;
-            //setTimeout(executeScheduledTasks, 50);
-            setTimeout(executeTasks, 50);
+        function scheduleExec() {
+            console.log("ИГР scheduleE")
+            setTimeout(execTasks, 50);
         }
-        /*
-        function executeScheduledTasks() {
-            var ids = Object.keys(scheduledTasks);
-            scheduledTasks = {};
-            console.log("ИГР executeST count:", ids.length);
-            for (var i in ids) {
-                var id = ids[i];
-                tasks[id].execute();
-            }
-        }
-        */
-        function executeTasks() {
+        function execTasks() {
             for (const i in tasks) {
                 var task = tasks[i];
-                task.schedule = () => { scheduleExec(i); };
+                task.schedule = scheduleExec;
                 task.execute();
             }
         }
-        executeTasks();
+        execTasks();
     </script>
   </body>
 </html>
