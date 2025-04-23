@@ -9,6 +9,9 @@
       #notes {
         display: none;
       }
+      #write {
+        display: none;
+      }
       #repo-div {
         display: flex;
       }
@@ -50,6 +53,17 @@
       <fieldset>
         <legend>Notes:</legend>
         <div id="notes-div">
+        </div>
+      </fieldset>
+    </form>
+
+    <!-- Write -->
+    <form id="write">
+      <fieldset>
+        <legend>Write new note:</legend>
+        <div id="write-div">
+          <textarea id="write-text" name="write-text" rows="5" cols="35" placeholder="For example: Finally, just NOTES and just GIT, why did it took us SO long?"></textarea>
+          <input id="write-post" type="submit" value="Post" />
         </div>
       </fieldset>
     </form>
@@ -129,6 +143,7 @@
     <script src="DoCloneRepository.js"></script>
     <script src="DoDisplayNotes.js"></script>
     <script src="DoPrintNotes.js"></script>
+    <script src="DoWriteNote.js"></script>
     <script src="Note.js"></script>
     <script src="other.js"></script>
 
@@ -150,6 +165,11 @@
                 deId("notes-div"),
             ),
             new DoPrintNotes(),
+            new DoWriteNote(
+                deId("write-post"),
+                deId("write"),
+                deId("write-text")
+            ),
         ];
         function scheduleExec() {
             console.log("ИГР scheduleE")

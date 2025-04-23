@@ -116,7 +116,6 @@ function DoCheckoutBranch(
 
     this.selectedFormBranch = function() {
         return deId("branch-div").value;
-        return null
     };
 
     this.setLoading = function(state) {
