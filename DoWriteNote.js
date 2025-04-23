@@ -20,12 +20,31 @@ function DoWriteNote(
     };
     this._construct();
 
+    this.commitNote = async function() {
+        console.log("ИГР DoWN.commitN-01");
+        var contents = await pfs.readFile(FILE_LOG, {encoding: "utf8"});
+        await git.add({
+            dir: DIR,
+            filepath: FILE_LOG_REL
+        });
+        await git.commit({
+            dir: DIR,
+            message: "From JS",
+            author: {
+                name: "JS",
+                email: "gitjs.org"
+            }
+        });
+    };
+
     this.execute = async function() {
         await this.resetRootFiles();
         this.resetUIVisibility();
         if (this.write) {
           this.write = false;
           await this.saveNote();
+          await this.commitNote();
+          //await this.pushNote();
           this.schedule();
         }
     };
@@ -49,7 +68,5 @@ function DoWriteNote(
         contents += `\n${dt}\n${id}\n${msg}\n`;
         await pfs.writeFile(FILE_LOG, contents, {encoding: "utf8"});
         console.log("ИГР DoWN.saveN-03 contents:", contents);
-        //var contents05 = await pfs.readFile(dir + "/chat.log", {encoding: "utf8"});
     };
-
 }
