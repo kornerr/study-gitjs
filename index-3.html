@@ -9,6 +9,9 @@
       #notes {
         display: none;
       }
+      #write {
+        display: none;
+      }
       #repo-div {
         display: flex;
       }
@@ -34,7 +37,8 @@
         </div>
       </fieldset>
     </form>
-    <!-- Branch-->
+
+    <!-- Branch -->
     <form id="branch">
       <fieldset>
         <legend>Change write branch</legend>
@@ -43,6 +47,7 @@
         <input id="branch-accept" type="submit" value="Checkout" />
       </fieldset>
     </form>
+
     <!-- Notes -->
     <form id="notes">
       <fieldset>
@@ -51,9 +56,28 @@
         </div>
       </fieldset>
     </form>
+
+    <!-- Write -->
+    <form id="write">
+      <fieldset>
+        <legend>Write new note:</legend>
+        <div id="write-div">
+          <div>
+            <input id="write-username" name="username" type="text" placeholder="Username"/>
+            <input id="write-password" name="password" type="password" placeholder="Password"/>
+          </div>
+          <div>
+            <textarea id="write-text" name="write-text" rows="5" cols="35" placeholder="For example: Finally, just NOTES and just GIT, why did it took us SO long?"></textarea>
+            <input id="write-post" type="submit" value="Post" />
+          </div>
+        </div>
+      </fieldset>
+    </form>
+
     <!-- Dependencies -->
     <script src="lightning-fs-3.3.6.min.js"></script>
     <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
+
     <!-- Global entities and constants -->
     <script>
         window.fs = new LightningFS("STORAGE-attempt3");
@@ -75,8 +99,10 @@
     <h1>%TEXT%</h1>
 </div>
 `;
+        window.ORIGIN = "origin";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
+
     <!-- Global reusable functions -->
     <script>
         // Get element by id.
@@ -118,13 +144,16 @@
             }
         }
     </script>
+
     <!-- Tasks -->
     <script src="DoCheckoutBranch.js"></script>
     <script src="DoCloneRepository.js"></script>
     <script src="DoDisplayNotes.js"></script>
     <script src="DoPrintNotes.js"></script>
+    <script src="DoWriteNote.js"></script>
     <script src="Note.js"></script>
     <script src="other.js"></script>
+
     <!-- Run tasks -->
     <script>
         var tasks = [
@@ -143,6 +172,13 @@
                 deId("notes-div"),
             ),
             new DoPrintNotes(),
+            new DoWriteNote(
+                deId("write-post"),
+                deId("write"),
+                deId("write-text"),
+                deId("write-username"),
+                deId("write-password")
+            ),
         ];
         function scheduleExec() {
             console.log("ИГР scheduleE")

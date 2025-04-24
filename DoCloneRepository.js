@@ -76,11 +76,7 @@ function DoCloneRepository(
     };
 
     this.setLoading = function(state) {
-        if (state) {
-            this.elURL.setAttribute("disabled", "true");
-        } else {
-            this.elURL.removeAttribute("disabled");
-        }
+        setElementEnabled(this.elURL, state);
         this.elAccept.style.display = state ? "none" : "block";
     };
 
