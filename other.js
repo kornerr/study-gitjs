@@ -64,6 +64,14 @@ function parseNotes(content) {
     return items;
 }
 
+function setElementEnabled(el, state) {
+    if (state) {
+        el.setAttribute("disabled", "true");
+    } else {
+        el.removeAttribute("disabled");
+    }
+}
+
 // https://stackoverflow.com/a/2117523
 function uuid() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(

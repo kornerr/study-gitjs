@@ -45,10 +45,12 @@ function DoWriteNote(
         await this.resetRootFiles();
         this.resetUIVisibility();
         if (this.write) {
+          this.setLoading(true);
           this.write = false;
           await this.saveNote();
           await this.commitNotes();
           await this.pushNotes();
+          this.setLoading(false);
           this.schedule();
         }
     };
@@ -85,4 +87,18 @@ function DoWriteNote(
         await pfs.writeFile(FILE_LOG, contents, {encoding: "utf8"});
         console.log("ИГР DoWN.saveN-03 contents:", contents);
     };
+
+    this.setLoading = function(state) {
+        var elements = [
+            this.elText,
+            this.elUsername,
+            this.elPassword
+        ];
+        for (var i in elements) {
+            var el = elements[i];
+            setElementEnabled(el, state);
+        }
+        this.elAccept.style.display = state ? "none" : "block";
+    };
+
 }

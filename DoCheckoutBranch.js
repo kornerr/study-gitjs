@@ -119,11 +119,7 @@ function DoCheckoutBranch(
     };
 
     this.setLoading = function(state) {
-        if (state) {
-            this.elAccept.setAttribute("disabled", "true");
-        } else {
-            this.elAccept.removeAttribute("disabled");
-        }
+        setElementEnabled(this.elAccept, state);
     };
 
     this.shouldCheckoutBranch = function() {
