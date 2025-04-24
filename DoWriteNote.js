@@ -1,12 +1,16 @@
 function DoWriteNote(
     elAccept,
     elForm,
-    elText
+    elText,
+    elUsername,
+    elPassword
 ) {
     this._construct = function() {
         this.elAccept = elAccept;
         this.elForm = elForm;
         this.elText = elText;
+        this.elUsername = elUsername;
+        this.elPassword = elPassword;
         this.rootFiles = [];
         this.schedule = null;
         this.write = false;
@@ -20,7 +24,7 @@ function DoWriteNote(
     };
     this._construct();
 
-    this.commitNote = async function() {
+    this.commitNotes = async function() {
         console.log("ИГР DoWN.commitN-01");
         var contents = await pfs.readFile(FILE_LOG, {encoding: "utf8"});
         await git.add({
@@ -43,10 +47,22 @@ function DoWriteNote(
         if (this.write) {
           this.write = false;
           await this.saveNote();
-          await this.commitNote();
-          //await this.pushNote();
+          await this.commitNotes();
+          await this.pushNotes();
           this.schedule();
         }
+    };
+
+    this.pushNotes = async function() {
+        console.log("ИГР DoWN.pushN-01");
+        await git.push({
+            dir: DIR,
+            remote: ORIGIN,
+            username: elUsername.value,
+            password: elPassword.value,
+            corsProxy: PROXY,
+        });
+        console.log("ИГР DoWN.pushN-02");
     };
 
     this.resetRootFiles = async function() {

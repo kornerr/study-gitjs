@@ -62,8 +62,14 @@
       <fieldset>
         <legend>Write new note:</legend>
         <div id="write-div">
-          <textarea id="write-text" name="write-text" rows="5" cols="35" placeholder="For example: Finally, just NOTES and just GIT, why did it took us SO long?"></textarea>
-          <input id="write-post" type="submit" value="Post" />
+          <div>
+            <input id="write-username" name="username" type="text" placeholder="Username"/>
+            <input id="write-password" name="password" type="password" placeholder="Password"/>
+          </div>
+          <div>
+            <textarea id="write-text" name="write-text" rows="5" cols="35" placeholder="For example: Finally, just NOTES and just GIT, why did it took us SO long?"></textarea>
+            <input id="write-post" type="submit" value="Post" />
+          </div>
         </div>
       </fieldset>
     </form>
@@ -93,6 +99,7 @@
     <h1>%TEXT%</h1>
 </div>
 `;
+        window.ORIGIN = "origin";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
     </script>
 
@@ -168,7 +175,9 @@
             new DoWriteNote(
                 deId("write-post"),
                 deId("write"),
-                deId("write-text")
+                deId("write-text"),
+                deId("write-username"),
+                deId("write-password")
             ),
         ];
         function scheduleExec() {
