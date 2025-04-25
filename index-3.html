@@ -150,6 +150,7 @@
     <script src="DoCheckoutBranch.js"></script>
     <script src="DoCloneRepository.js"></script>
     <script src="DoDisplayNotes.js"></script>
+    <script src="DoFetchReadOnlyBranches.js"></script>
     <script src="DoPrintNotes.js"></script>
     <script src="DoWriteNote.js"></script>
     <script src="Note.js"></script>
@@ -172,6 +173,7 @@
                 deId("notes"),
                 deId("notes-div"),
             ),
+            new DoFetchReadOnlyBranches(),
             new DoPrintNotes(),
             new DoWriteNote(
                 deId("write-post"),
