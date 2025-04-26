@@ -1,3 +1,16 @@
+async function activeBranch() {
+    try {
+        var name = await git.currentBranch({
+            dir: DIR,
+            fullname: false,
+        });
+        return name;
+    } catch (e) {
+        reportError("activeB-01 error:", e);
+        return null;
+    }
+}
+
 // Get element by id using a short function name.
 function deId(sid) {
     return document.getElementById(sid);
@@ -26,7 +39,8 @@ async function listBranches() {
         });
         return items.filter(item => item != "HEAD");
     } catch (e) {
-        reportError("listBranches", e);
+        reportError("listBranches-01 error:", e);
+        return null;
     }
 }
 

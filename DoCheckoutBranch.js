@@ -68,17 +68,7 @@ function DoCheckoutBranch(
         if (!this.isVisible) {
             return;
         }
-
-        try {
-            var br = await git.currentBranch({
-                dir: DIR,
-                fullname: false,
-            });
-            this.activeBranch = br;
-            console.log("ИГР DoSB.resetAB-01 activeB:", this.activeBranch);
-        } catch (e) {
-            reportError("doSB?.resetAB-02", e);
-        }
+        this.activeBranch = activeBranch();
     };
 
     this.resetRootFiles = async function() {

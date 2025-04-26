@@ -10,15 +10,16 @@ function DoFetchReadOnlyBranches() {
         console.log("ИГР DoFROB.execute");
         await this.resetRootFiles();
         await this.readRepoURL();
-        await this.collectBranches();
+        await this.collectReadOnlyNotes();
     };
 
-    this.collectBranches = async function() {
+    this.collectReadOnlyNotes = async function() {
         if (!this.rootFiles.includes(DIR_REL)) {
             return;
         }
-        this.branches = await listBranches();
-        console.log("ИГР DoFROB.collectB-01 branches:", this.branches);
+        var branches = await listBranches();
+        var current = await activeBranch();
+        console.log("ИГР DoFROB.collectB-01 branches/current:", branches, current);
     }
 
     this.readRepoURL = async function() {
