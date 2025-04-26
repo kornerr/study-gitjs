@@ -11,7 +11,7 @@ async function activeBranch() {
     }
 }
 
-// Get element by id using a short function name.
+// Get element by id using a short function name
 function deId(sid) {
     return document.getElementById(sid);
 }
@@ -95,7 +95,7 @@ function parseNotes(content) {
     return items;
 }
 
-// Report error with an alert.
+// Report error with an alert
 function reportError(title, err) {
     alert(title + "\n\n" + err.name + ": " + err.message);
 }
