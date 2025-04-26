@@ -50,17 +50,8 @@ function DoCheckoutBranch(
         if (!this.isVisible) {
             return;
         }
-
-        try {
-            var brs = await git.listBranches({
-                dir: DIR,
-                remote: "origin"
-            });
-            this.branches = brs.filter(br => br != "HEAD");
-            console.log("ИГР DoSB.collectB-01 branches:", this.branches);
-        } catch (e) {
-            reportError("doSB?.collectB-02", e);
-        }
+        this.branches = await listBranches();
+        console.log("ИГР DoSB.collectB-01 branches:", this.branches);
     };
 
     this.execute = async function() {
