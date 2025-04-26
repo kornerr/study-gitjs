@@ -106,16 +106,6 @@
 
     <!-- Global reusable functions -->
     <script>
-        // Get element by id.
-        function deId(sid) {
-            return document.getElementById(sid);
-        }
-       
-        // Report error with an alert.
-        function reportError(title, err) {
-            alert(title + "\n\n" + err.name + ": " + err.message);
-        }
-       
         // Remove files recursively.
         async function rmFiles(files) {
             for (var i in files) {

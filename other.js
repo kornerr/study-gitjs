@@ -1,4 +1,9 @@
+// Get element by id using a short function name.
+function deId(sid) {
+    return document.getElementById(sid);
+}
 
+// Return date string in YYYY-MM-DD H:m format (or something like that)
 function formatDate(dt) {
     var year = dt.getFullYear();
     var mon = String(dt.getMonth() + 1).padStart(2, "0");
@@ -76,6 +81,11 @@ function parseNotes(content) {
     return items;
 }
 
+// Report error with an alert.
+function reportError(title, err) {
+    alert(title + "\n\n" + err.name + ": " + err.message);
+}
+       
 function setElementEnabled(el, state) {
     if (state) {
         el.setAttribute("disabled", "true");
