@@ -44,6 +44,24 @@ async function listBranches() {
     }
 }
 
+function loadURL(p) {
+    return new Promise(function(resolve, reject) {
+        var req = new XMLHttpRequest();
+        req.open(p.method, p.url);
+        req.onload = function() {
+            if (
+                req.readyState == 4 &&
+                req.status == 200
+            ) {
+                resolve(req);
+            } else {
+                reject(req);
+            }
+        };
+        req.send(p.body);
+    });
+}
+
 function parseNotes(content) {
     var items = [];
     var lines = content.split("\n");
