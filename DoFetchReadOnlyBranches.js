@@ -1,5 +1,6 @@
 function DoFetchReadOnlyBranches() {
     this._construct = function() {
+        this.otherNotes = {};
         this.readOnlyNoteURLs = [];
         this.repoURL = null;
         this.rootFiles = [];
@@ -35,7 +36,27 @@ function DoFetchReadOnlyBranches() {
         await this.resetRootFiles();
         await this.readRepoURL();
         await this.collectReadOnlyNoteURLs();
+        await this.loadOtherNotes();
     };
+
+    this.loadOtherNotes = async function() {
+        if (!this.rootFiles.includes(DIR_REL)) {
+            return;
+        }
+        this.otherNotes = {};
+        for (var i in this.readOnlyNoteURLs) {
+            var url = this.readOnlyNoteURLs[i];
+            const params = new NetRequest();
+            params.url = url;
+            var res = await loadURL(params);
+            this.otherNotes[url] = res;
+            console.log("ИГР DoFROB.loadON-1 url/res:", url, res);
+            if (res.status == 200) {
+                var notes = parseNotes(res.responseText);
+                console.log("ИГР DoFROB.loadON-2 url/notes:", url, notes);
+            }
+        }
+    }
 
     this.readRepoURL = async function() {
         if (!this.rootFiles.includes(DIR_REL)) {

@@ -55,7 +55,7 @@ function loadURL(p) {
             ) {
                 resolve(req);
             } else {
-                reject(req);
+                resolve(req);
             }
         };
         req.send(p.body);
