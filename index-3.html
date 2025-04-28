@@ -104,6 +104,7 @@
         window.FMT_RAW_GITEA_FILE = "%REPO_URL%/raw/branch/%BRANCH%/%FILE%";
         window.ORIGIN = "origin";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
+        window.ROOT = "/";
     </script>
 
     <!-- Global reusable functions -->
@@ -161,11 +162,11 @@
                 deId("repo-accept"),
                 deId("repo-url")
             ),
+            new DoFetchReadOnlyBranches(),
             new DoDisplayNotes(
                 deId("notes"),
                 deId("notes-div"),
             ),
-            new DoFetchReadOnlyBranches(),
             new DoPrintNotes(),
             new DoWriteNote(
                 deId("write-post"),
