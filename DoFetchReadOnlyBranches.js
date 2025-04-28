@@ -37,6 +37,7 @@ function DoFetchReadOnlyBranches() {
         await this.readRepoURL();
         await this.collectReadOnlyNoteURLs();
         await this.loadOtherNotes();
+        await this.saveOtherNotes();
     };
 
     this.loadOtherNotes = async function() {
@@ -76,5 +77,12 @@ function DoFetchReadOnlyBranches() {
 
     this.resetRootFiles = async function() {
         this.rootFiles = await pfs.readdir("/");
+    };
+
+    this.saveOtherNotes = async function() {
+        console.log("ИГР DoFROB.saveON-01");
+        contents = JSON.stringify(this.otherNotes);
+        await pfs.writeFile(FILE_RO_LOG, contents, {encoding: "utf8"});
+        console.log("ИГР DoFROB.saveON-02 contents:", contents);
     };
 }
