@@ -14,12 +14,13 @@ function DoDisplayNotes(
 
     this.displayNotes = async function() {
         if (this.currentNotes.length == 0) {
+            console.log("ИГР DoDN.displayN-");
             return;
         }
         console.log("ИГР DoDN.displayN-1 notes");
         var html = "";
         for (var i in this.currentNotes) {
-            var n = notes[i];
+            var n = this.currentNotes[i];
             html += FMT_NOTE
                 .replaceAll("%DATE%", formatDate(n.date))
                 .replaceAll("%TEXT%", n.text);
