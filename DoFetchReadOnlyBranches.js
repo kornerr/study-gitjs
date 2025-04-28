@@ -1,7 +1,7 @@
 function DoFetchReadOnlyBranches() {
     this._construct = function() {
         this.otherNotes = {};
-        this.readOnlyNoteURLs = [];
+        this.readOnlyNoteURLs = {};
         this.repoURL = null;
         this.rootFiles = [];
         this.schedule = null;
@@ -15,7 +15,7 @@ function DoFetchReadOnlyBranches() {
         var branches = await listBranches();
         var current = await activeBranch();
         console.log("ИГР DoFROB.collectRONU-01 branches/current:", branches, current);
-        this.readOnlyNoteURLs = [];
+        this.readOnlyNoteURLs = {};
         for (var i in branches) {
             var branch = branches[i];
             // Exclude checked out branch
@@ -26,7 +26,7 @@ function DoFetchReadOnlyBranches() {
                 .replaceAll("%REPO_URL%", this.repoURL)
                 .replaceAll("%BRANCH%", branch)
                 .replaceAll("%FILE%", FILE_LOG_REL);
-            this.readOnlyNoteURLs.push(url);
+            this.readOnlyNoteURLs[branch] = url;
         }
         console.log("ИГР DoFROB.collectRONU-02 urls:", this.readOnlyNoteURLs);
     };
@@ -44,15 +44,15 @@ function DoFetchReadOnlyBranches() {
             return;
         }
         this.otherNotes = {};
-        for (var i in this.readOnlyNoteURLs) {
-            var url = this.readOnlyNoteURLs[i];
+        for (var branch in this.readOnlyNoteURLs) {
+            var url = this.readOnlyNoteURLs[branch];
             const params = new NetRequest();
             params.url = url;
             var res = await loadURL(params);
-            this.otherNotes[url] = res;
             console.log("ИГР DoFROB.loadON-1 url/res:", url, res);
             if (res.status == 200) {
                 var notes = parseNotes(res.responseText);
+                this.otherNotes[branch] = notes;
                 console.log("ИГР DoFROB.loadON-2 url/notes:", url, notes);
             }
         }
