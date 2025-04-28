@@ -52,8 +52,7 @@ function DoFetchReadOnlyBranches() {
             var res = await loadURL(params);
             console.log("ИГР DoFROB.loadON-1 url/res:", url, res);
             if (res.status == 200) {
-                var notes = parseNotes(res.responseText);
-                this.otherNotes[branch] = notes;
+                this.otherNotes[branch] = res.responseText;
                 console.log("ИГР DoFROB.loadON-2 url/notes:", url, notes);
             }
         }

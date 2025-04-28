@@ -6,6 +6,7 @@ function DoDisplayNotes(
         this.elForm = elForm;
         this.elSection = elSection;
         this.currentNotes = [];
+        this.otherNotes = {};
         this.dirFiles = [];
         this.rootFiles = [];
         this.schedule = null;
@@ -32,7 +33,7 @@ function DoDisplayNotes(
     this.execute = async function() {
         await this.resetFiles();
         await this.readCurrentNotes();
-        //await this.readOtherNotes();
+        await this.readOtherNotes();
         this.displayNotes();
     };
 
@@ -43,6 +44,16 @@ function DoDisplayNotes(
         console.log("ИГР DoDN.readCN-1")
         var contentLog = await pfs.readFile(FILE_LOG, {encoding: "utf8"});
         this.currentNotes = parseNotes(contentLog);
+    };
+
+    this.readOtherNotes = async function() {
+        if (!this.dirFiles.includes(FILE_RO_LOG_REL)) {
+            return;
+        }
+        console.log("ИГР DoDN.readON-1")
+        var others = await pfs.readFile(FILE_RO_LOG, {encoding: "utf8"});
+        var json = JSON.parse(others);
+        console.log("ИГР DoDN.readON-2 json:", json);
     };
 
     this.resetFiles = async function() {
