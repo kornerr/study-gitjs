@@ -14,18 +14,16 @@ function DoDisplayNotes(
     this._construct();
 
     this.displayNotes = async function() {
-        if (this.currentNotes.length == 0) {
-            console.log("ИГР DoDN.displayN-");
-            return;
-        }
-        console.log("ИГР DoDN.displayN-1 notes");
-        var html = "";
+        var ab = await activeBranch();
+        console.log("ИГР DoDN.displayN-1 notes activeB:", ab);
+        var html = " ";
         for (var i in this.currentNotes) {
             var n = this.currentNotes[i];
             html += FMT_NOTE
                 .replaceAll("%DATE%", formatDate(n.date))
                 .replaceAll("%TEXT%", n.text);
         }
+        console.log("ИГР DoDN.displayN-2 html:", html);
         this.elSection.innerHTML = html;
         this.elForm.style.display = "block";
     };
@@ -39,6 +37,7 @@ function DoDisplayNotes(
 
     this.readCurrentNotes = async function() {
         if (!this.dirFiles.includes(FILE_LOG_REL)) {
+            this.currentNotes = [];
             return;
         }
         console.log("ИГР DoDN.readCN-1")

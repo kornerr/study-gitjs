@@ -41,7 +41,7 @@
     <!-- Branch -->
     <form id="branch">
       <fieldset>
-        <legend>Change write branch</legend>
+        <legend>Write branch</legend>
         <select id="branch-div">
         </select>
         <input id="branch-accept" type="submit" value="Checkout" />
@@ -51,7 +51,7 @@
     <!-- Notes -->
     <form id="notes">
       <fieldset>
-        <legend>Notes:</legend>
+        <legend>Notes</legend>
         <div id="notes-div">
         </div>
       </fieldset>
@@ -60,15 +60,15 @@
     <!-- Write -->
     <form id="write">
       <fieldset>
-        <legend>Write new note:</legend>
+        <legend>New note</legend>
         <div id="write-div">
-          <div>
-            <input id="write-username" name="username" type="text" placeholder="Username"/>
-            <input id="write-password" name="password" type="password" placeholder="Password"/>
-          </div>
           <div>
             <textarea id="write-text" name="write-text" rows="5" cols="35" placeholder="For example: Finally, just NOTES and just GIT, why did it took us SO long?"></textarea>
             <input id="write-post" type="submit" value="Post" />
+          </div>
+          <div>
+            <input id="write-username" name="username" type="text" placeholder="Username"/>
+            <input id="write-password" name="password" type="password" placeholder="Password"/>
           </div>
         </div>
       </fieldset>
@@ -152,15 +152,15 @@
     <!-- Run tasks -->
     <script>
         var tasks = [
-            new DoCheckoutBranch(
-                deId("branch"),
-                deId("branch-div"),
-                deId("branch-accept")
-            ),
             new DoCloneRepository(
                 deId("repo"),
                 deId("repo-accept"),
                 deId("repo-url")
+            ),
+            new DoCheckoutBranch(
+                deId("branch"),
+                deId("branch-div"),
+                deId("branch-accept")
             ),
             new DoFetchReadOnlyBranches(),
             new DoDisplayNotes(

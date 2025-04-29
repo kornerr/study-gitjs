@@ -28,7 +28,7 @@ function DoFetchReadOnlyBranches() {
                 .replaceAll("%FILE%", FILE_LOG_REL);
             this.readOnlyNoteURLs[branch] = url;
         }
-        console.log("ИГР DoFROB.collectRONU-02 urls:", this.readOnlyNoteURLs);
+        //console.log("ИГР DoFROB.collectRONU-02 urls:", this.readOnlyNoteURLs);
     };
 
     this.execute = async function() {
@@ -50,10 +50,10 @@ function DoFetchReadOnlyBranches() {
             const params = new NetRequest();
             params.url = url;
             var res = await loadURL(params);
-            console.log("ИГР DoFROB.loadON-1 url/res:", url, res);
+            //console.log("ИГР DoFROB.loadON-1 url/res:", url, res);
             if (res.status == 200) {
                 this.otherNotes[branch] = res.responseText;
-                console.log("ИГР DoFROB.loadON-2 url/notes:", url, notes);
+                //console.log("ИГР DoFROB.loadON-2 url/notes:", url, notes);
             }
         }
     }
@@ -82,6 +82,6 @@ function DoFetchReadOnlyBranches() {
         console.log("ИГР DoFROB.saveON-01");
         contents = JSON.stringify(this.otherNotes);
         await pfs.writeFile(FILE_RO_LOG, contents, {encoding: "utf8"});
-        console.log("ИГР DoFROB.saveON-02 contents:", contents);
+        //console.log("ИГР DoFROB.saveON-02 contents:", contents);
     };
 }
