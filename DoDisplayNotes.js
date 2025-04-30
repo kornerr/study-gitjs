@@ -5,54 +5,66 @@ function DoDisplayNotes(
     this._construct = function() {
         this.elForm = elForm;
         this.elSection = elSection;
-        this.currentNotes = [];
-        this.otherNotes = {};
+        this.currentLog = "";
+        this.otherLogs = "";
         this.dirFiles = [];
         this.rootFiles = [];
         this.schedule = null;
     };
     this._construct();
 
+    this.parseLogs = function() {
+        var json = JSON.parse(this.otherLogs);
+        var logs = this.currentLog;
+        for (var branch in json) {
+            var log = json[branch];
+            logs += log;
+        }
+        this.notes = parseNotes(logs);
+        this.notes.sort(function(n1, n2) {
+            return n1.date - n2.date;
+        });
+    };
+
     this.displayNotes = async function() {
-        var ab = await activeBranch();
-        console.log("ИГР DoDN.displayN-1 notes activeB:", ab);
-        var html = " ";
-        for (var i in this.currentNotes) {
-            var n = this.currentNotes[i];
+        console.log("ИГР DoDN.displayN-1 notes");
+        var html = "";
+        for (var i in this.notes) {
+            var n = this.notes[i];
             html += FMT_NOTE
                 .replaceAll("%DATE%", formatDate(n.date))
                 .replaceAll("%TEXT%", n.text);
         }
-        console.log("ИГР DoDN.displayN-2 html:", html);
+        //console.log("ИГР DoDN.displayN-2 html:", html);
         this.elSection.innerHTML = html;
         this.elForm.style.display = "block";
     };
 
     this.execute = async function() {
         await this.resetFiles();
-        await this.readCurrentNotes();
-        await this.readOtherNotes();
+        await this.readCurrentLog();
+        await this.readOtherLogs();
+        this.parseLogs();
         this.displayNotes();
     };
 
-    this.readCurrentNotes = async function() {
+    this.readCurrentLog = async function() {
+        console.log("ИГР DoDN.readCL-1")
         if (!this.dirFiles.includes(FILE_LOG_REL)) {
-            this.currentNotes = [];
+            this.currentLog = "";
             return;
         }
-        console.log("ИГР DoDN.readCN-1")
-        var contentLog = await pfs.readFile(FILE_LOG, {encoding: "utf8"});
-        this.currentNotes = parseNotes(contentLog);
+        console.log("ИГР DoDN.readCL-2")
+        this.currentLog = await pfs.readFile(FILE_LOG, {encoding: "utf8"});
     };
 
-    this.readOtherNotes = async function() {
+    this.readOtherLogs = async function() {
+        console.log("ИГР DoDN.readOL-1")
         if (!this.dirFiles.includes(FILE_RO_LOG_REL)) {
             return;
         }
-        console.log("ИГР DoDN.readON-1")
-        var others = await pfs.readFile(FILE_RO_LOG, {encoding: "utf8"});
-        var json = JSON.parse(others);
-        console.log("ИГР DoDN.readON-2 json:", json);
+        console.log("ИГР DoDN.readOL-2")
+        this.otherLogs  = await pfs.readFile(FILE_RO_LOG, {encoding: "utf8"});
     };
 
     this.resetFiles = async function() {
