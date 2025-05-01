@@ -7,7 +7,7 @@ function DoDisplayNotes(
         this.elSection = elSection;
         this.currentLog = "";
         this.currentTerminal = null;
-        this.otherLogs = "";
+        this.otherLogs = "{}";
         this.dirFiles = [];
         this.notes = [];
         this.rootFiles = [];
@@ -42,9 +42,6 @@ function DoDisplayNotes(
     };
 
     this.execute = async function() {
-        if (!this.rootFiles.includes(DIR_REL)) {
-            return;
-        }
         await this.resetFiles();
         await this.readCurrentLog();
         await this.readCurrentTerminal();
