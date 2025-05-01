@@ -61,6 +61,8 @@ function DoDisplayNotes(
     };
 
     this.readCurrentTerminal = async function() {
+        this.currentTerminal = await activeBranch();
+        /*
         console.log("ИГР DoDN.readCT-1");
         if (!this.dirFiles.includes(FILE_CONFIG_REL)) {
             this.currentTerminal = "undefined-terminal";
@@ -69,6 +71,7 @@ function DoDisplayNotes(
         var config = await pfs.readFile(FILE_CONFIG, {encoding: "utf8"});
         this.currentTerminal = parseTerminal(config);
         console.log("ИГР DoDN.readCT-2 currentT:", this.currentTerminal);
+        */
     };
 
     this.readOtherLogs = async function() {
