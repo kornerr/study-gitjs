@@ -9,6 +9,9 @@ function DoFetchReadOnlyBranches() {
     this._construct();
 
     this.collectReadOnlyNoteURLs = async function() {
+        if (!this.rootFiles.includes(DIR_REL)) {
+            return;
+        }
         var branches = await listBranches();
         var current = await activeBranch();
         console.log("ИГР DoFROB.collectRONU-01 branches/current:", branches, current);
@@ -29,9 +32,6 @@ function DoFetchReadOnlyBranches() {
     };
 
     this.execute = async function() {
-        if (!this.rootFiles.includes(DIR_REL)) {
-            return;
-        }
         console.log("ИГР DoFROB.execute");
         await this.resetRootFiles();
         await this.readRepoURL();
