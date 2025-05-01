@@ -88,7 +88,7 @@ function DoFetchReadOnlyBranches() {
         if (contentsWas != contentsNow) {
             await pfs.writeFile(FILE_RO_LOG, contentsNow, {encoding: "utf8"});
             console.log("ИГР DoFROB.saveON-02 contents:", contentsNow);
-            this.schedule();
+            //this.schedule();
         }
     };
 }
