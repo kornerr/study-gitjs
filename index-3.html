@@ -97,7 +97,10 @@
         window.FMT_BRANCH_OPTION = "<option id=\"%ID%\" value =\"%VALUE%\" %SELECTED%/>%VALUE%</option>";
         window.FMT_NOTE = `
 <div class=\"note\">
-    <p>%DATE%</p>
+    <p>
+      <span>%DATE%</span>
+      <span>[%TERMINAL%]</span>
+    </p>
     <h1>%TEXT%</h1>
 </div>
 `;

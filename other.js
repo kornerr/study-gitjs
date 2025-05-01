@@ -62,7 +62,7 @@ function loadURL(p) {
     });
 }
 
-function parseNotes(dict, content) {
+function parseNotes(dict, terminal, content) {
     var lines = content.split("\n");
     var currentItem = new Note();
     for (var i in lines) {
@@ -79,6 +79,7 @@ function parseNotes(dict, content) {
             isDate(dt)
         ) {
             // Second date. Set item.
+            currentItem.terminal = terminal;
             dict[currentItem.id] = currentItem;
             currentItem = new Note();
             currentItem.date = dt;
@@ -106,6 +107,7 @@ function parseNotes(dict, content) {
     }
     // Last item. Set it.
     if (currentItem.date != null) {
+        currentItem.terminal = terminal;
         dict[currentItem.id] = currentItem;
     }
 }

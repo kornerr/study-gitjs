@@ -17,13 +17,12 @@ function DoDisplayNotes(
 
     this.parseLogs = function() {
         var json = JSON.parse(this.otherLogs);
-        var logs = this.currentLog;
+        json[this.currentTerminal] = this.currentLog;
+        var dict = {};
         for (var branch in json) {
             var log = json[branch];
-            logs += log;
+            parseNotes(dict, branch, log);
         }
-        var dict = {};
-        parseNotes(dict, logs);
         this.notes = sortedNotes(dict);
     };
 
@@ -34,6 +33,7 @@ function DoDisplayNotes(
             var n = this.notes[i];
             html += FMT_NOTE
                 .replaceAll("%DATE%", formatDate(n.date))
+                .replaceAll("%TERMINAL%", n.terminal)
                 .replaceAll("%TEXT%", n.text);
         }
         //console.log("ИГР DoDN.displayN-2 html:", html);
