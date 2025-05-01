@@ -66,7 +66,8 @@ function DoDisplayNotes(
             return;
         }
         var config = await pfs.readFile(FILE_CONFIG, {encoding: "utf8"});
-        console.log("ИГР DoDN.readCT-2 config:", config);
+        this.currentTerminal = parseTerminal(config);
+        console.log("ИГР DoDN.readCT-2 currentT:", this.currentTerminal);
     };
 
     this.readOtherLogs = async function() {

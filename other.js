@@ -114,6 +114,22 @@ function parseNotes(content) {
     return items;
 }
 
+function parseTerminal(content) {
+    var lines = content.split("\n");
+    for (var i in lines) {
+        var ln = lines[i];
+        var parts = ln.split(" = ");
+        if (
+            parts.length == 2 &&
+            parts[0] == TERMINAL
+        ) {
+            return parts[1];
+        }
+    }
+
+    return null;
+}
+
 // Report error with an alert
 function reportError(title, err) {
     alert(title + "\n\n" + err.name + ": " + err.message);
