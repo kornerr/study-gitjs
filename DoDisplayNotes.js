@@ -22,8 +22,9 @@ function DoDisplayNotes(
             var log = json[branch];
             logs += log;
         }
-        var notesDict = parseNotes(logs);
-        this.notes = sortedNotes(notesDict);
+        var dict = {};
+        parseNotes(dict, logs);
+        this.notes = sortedNotes(dict);
     };
 
     this.displayNotes = async function() {

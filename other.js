@@ -62,8 +62,7 @@ function loadURL(p) {
     });
 }
 
-function parseNotes(content) {
-    var items = {};
+function parseNotes(dict, content) {
     var lines = content.split("\n");
     var currentItem = new Note();
     for (var i in lines) {
@@ -80,8 +79,7 @@ function parseNotes(content) {
             isDate(dt)
         ) {
             // Second date. Set item.
-            items[currentItem.id] = currentItem
-            //items.push(currentItem);
+            dict[currentItem.id] = currentItem;
             currentItem = new Note();
             currentItem.date = dt;
         } else if (
@@ -108,10 +106,8 @@ function parseNotes(content) {
     }
     // Last item. Set it.
     if (currentItem.date != null) {
-        items[currentItem.id] = currentItem
+        dict[currentItem.id] = currentItem;
     }
-
-    return items;
 }
 
 function parseTerminal(content) {
