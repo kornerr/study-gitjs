@@ -80,8 +80,12 @@ function DoFetchReadOnlyBranches() {
 
     this.saveOtherNotes = async function() {
         console.log("ИГР DoFROB.saveON-01");
-        contents = JSON.stringify(this.otherNotes);
-        await pfs.writeFile(FILE_RO_LOG, contents, {encoding: "utf8"});
-        //console.log("ИГР DoFROB.saveON-02 contents:", contents);
+        var contentsWas = await pfs.readFile(FILE_RO_LOG, {encoding: "utf8"});
+        var contentsNow = JSON.stringify(this.otherNotes);
+        if (contentsWas != contentsNow) {
+            await pfs.writeFile(FILE_RO_LOG, contentsNow, {encoding: "utf8"});
+            console.log("ИГР DoFROB.saveON-02 contents:", contentsNow);
+            this.schedule();
+        }
     };
 }

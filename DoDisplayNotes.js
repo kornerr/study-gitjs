@@ -8,6 +8,7 @@ function DoDisplayNotes(
         this.currentLog = "";
         this.otherLogs = "";
         this.dirFiles = [];
+        this.notes = [];
         this.rootFiles = [];
         this.schedule = null;
     };
@@ -20,10 +21,8 @@ function DoDisplayNotes(
             var log = json[branch];
             logs += log;
         }
-        this.notes = parseNotes(logs);
-        this.notes.sort(function(n1, n2) {
-            return n1.date - n2.date;
-        });
+        var notesDict = parseNotes(logs);
+        this.notes = sortedNotes(notesDict);
     };
 
     this.displayNotes = async function() {

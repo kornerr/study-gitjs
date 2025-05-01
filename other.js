@@ -63,7 +63,7 @@ function loadURL(p) {
 }
 
 function parseNotes(content) {
-    var items = [];
+    var items = {};
     var lines = content.split("\n");
     var currentItem = new Note();
     for (var i in lines) {
@@ -79,8 +79,9 @@ function parseNotes(content) {
             currentItem.date != null &&
             isDate(dt)
         ) {
-            // Second date. Add item.
-            items.push(currentItem);
+            // Second date. Set item.
+            items[currentItem.id] = currentItem
+            //items.push(currentItem);
             currentItem = new Note();
             currentItem.date = dt;
         } else if (
@@ -105,9 +106,9 @@ function parseNotes(content) {
             currentItem.text += "\n" + ln;
         }
     }
-    // Last item.
+    // Last item. Set it.
     if (currentItem.date != null) {
-       items.push(currentItem);
+        items[currentItem.id] = currentItem
     }
 
     return items;
@@ -124,6 +125,21 @@ function setElementEnabled(el, state) {
     } else {
         el.removeAttribute("disabled");
     }
+}
+
+function sortedNotes(dict) {
+    // Convert dictionary to array
+    var items = [];
+    for (var i in dict) {
+        var item = dict[i];
+        items.push(item);
+    }
+    // Sort the array
+    items.sort(function(item1, item2) {
+        return item1.date - item2.date;
+    });
+
+    return items;
 }
 
 // https://stackoverflow.com/a/2117523
