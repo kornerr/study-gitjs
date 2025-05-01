@@ -42,6 +42,9 @@ function DoDisplayNotes(
     };
 
     this.execute = async function() {
+        if (!this.rootFiles.includes(DIR_REL)) {
+            return;
+        }
         await this.resetFiles();
         await this.readCurrentLog();
         await this.readCurrentTerminal();
