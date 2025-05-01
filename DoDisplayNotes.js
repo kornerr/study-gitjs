@@ -6,6 +6,7 @@ function DoDisplayNotes(
         this.elForm = elForm;
         this.elSection = elSection;
         this.currentLog = "";
+        this.currentTerminal = null;
         this.otherLogs = "";
         this.dirFiles = [];
         this.notes = [];
@@ -42,6 +43,7 @@ function DoDisplayNotes(
     this.execute = async function() {
         await this.resetFiles();
         await this.readCurrentLog();
+        await this.readCurrentTerminal();
         await this.readOtherLogs();
         this.parseLogs();
         this.displayNotes();
@@ -55,6 +57,16 @@ function DoDisplayNotes(
         }
         console.log("ИГР DoDN.readCL-2")
         this.currentLog = await pfs.readFile(FILE_LOG, {encoding: "utf8"});
+    };
+
+    this.readCurrentTerminal = async function() {
+        console.log("ИГР DoDN.readCT-1");
+        if (!this.dirFiles.includes(FILE_CONFIG_REL)) {
+            this.currentTerminal = "undefined-terminal";
+            return;
+        }
+        var config = await pfs.readFile(FILE_CONFIG, {encoding: "utf8"});
+        console.log("ИГР DoDN.readCT-2 config:", config);
     };
 
     this.readOtherLogs = async function() {
