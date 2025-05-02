@@ -1,4 +1,22 @@
+async function activeBranch() {
+    try {
+        var name = await git.currentBranch({
+            dir: DIR,
+            fullname: false,
+        });
+        return name;
+    } catch (e) {
+        reportError("activeB-01 error:", e);
+        return null;
+    }
+}
 
+// Get element by id using a short function name
+function deId(sid) {
+    return document.getElementById(sid);
+}
+
+// Return date string in YYYY-MM-DD H:m format (or something like that)
 function formatDate(dt) {
     var year = dt.getFullYear();
     var mon = String(dt.getMonth() + 1).padStart(2, "0");
@@ -13,8 +31,38 @@ function isDate(dt) {
     return dt instanceof Date && !isNaN(dt);
 }
 
-function parseNotes(content) {
-    var items = [];
+async function listBranches() {
+    try {
+        var items = await git.listBranches({
+            dir: DIR,
+            remote: ORIGIN
+        });
+        return items.filter(item => item != "HEAD");
+    } catch (e) {
+        reportError("listBranches-01 error:", e);
+        return null;
+    }
+}
+
+function loadURL(p) {
+    return new Promise(function(resolve, reject) {
+        var req = new XMLHttpRequest();
+        req.open(p.method, p.url);
+        req.onload = function() {
+            if (
+                req.readyState == 4 &&
+                req.status == 200
+            ) {
+                resolve(req);
+            } else {
+                resolve(req);
+            }
+        };
+        req.send(p.body);
+    });
+}
+
+function parseNotes(dict, terminal, content) {
     var lines = content.split("\n");
     var currentItem = new Note();
     for (var i in lines) {
@@ -30,8 +78,9 @@ function parseNotes(content) {
             currentItem.date != null &&
             isDate(dt)
         ) {
-            // Second date. Add item.
-            items.push(currentItem);
+            // Second date. Set item.
+            currentItem.terminal = terminal;
+            dict[currentItem.id] = currentItem;
             currentItem = new Note();
             currentItem.date = dt;
         } else if (
@@ -56,20 +105,55 @@ function parseNotes(content) {
             currentItem.text += "\n" + ln;
         }
     }
-    // Last item.
+    // Last item. Set it.
     if (currentItem.date != null) {
-       items.push(currentItem);
+        currentItem.terminal = terminal;
+        dict[currentItem.id] = currentItem;
     }
-
-    return items;
 }
 
+function parseTerminal(content) {
+    var lines = content.split("\n");
+    for (var i in lines) {
+        var ln = lines[i];
+        var parts = ln.split(" = ");
+        if (
+            parts.length == 2 &&
+            parts[0] == TERMINAL
+        ) {
+            return parts[1];
+        }
+    }
+
+    return null;
+}
+
+// Report error with an alert
+function reportError(title, err) {
+    alert(title + "\n\n" + err.name + ": " + err.message);
+}
+       
 function setElementEnabled(el, state) {
     if (state) {
         el.setAttribute("disabled", "true");
     } else {
         el.removeAttribute("disabled");
     }
+}
+
+function sortedNotes(dict) {
+    // Convert dictionary to array
+    var items = [];
+    for (var i in dict) {
+        var item = dict[i];
+        items.push(item);
+    }
+    // Sort the array
+    items.sort(function(item1, item2) {
+        return item1.date - item2.date;
+    });
+
+    return items;
 }
 
 // https://stackoverflow.com/a/2117523
@@ -85,24 +169,6 @@ function uuid() {
 }
 
 /*
-async function add(path) {
-  return await git.add({
-    dir: DIR,
-    filepath: path,
-  });
-}
-
-async function clone(url, branch) {
-  return await git.clone({
-    dir: DIR,
-    corsProxy: CORS_PROXY,
-    url: url,
-    ref: branch,
-    singleBranch: true,
-    depth: 1
-  });
-}
-
 async function createFileSystem(storageName) {
   fs = new LightningFS(storageName);
   git.plugins.set("fs", fs);
@@ -111,16 +177,6 @@ async function createFileSystem(storageName) {
 
 async function pull(url, branch) {
   return await git.pull({
-    dir: DIR,
-    corsProxy: CORS_PROXY,
-    url: url,
-    ref: branch,
-    singleBranch: true,
-  });
-}
-
-async function push(url, branch) {
-  return await git.push({
     dir: DIR,
     corsProxy: CORS_PROXY,
     url: url,

@@ -25,13 +25,13 @@ function DoCheckoutBranch(
 
     this.checkoutBranch = async function() {
         var proceed = this.shouldCheckoutBranch();
-        console.log("ИГР DoSB.checkoutB-00 proceed:", proceed);
+        console.log("ИГР DoCB.checkoutB-00 proceed:", proceed);
         if (!proceed) {
-            console.log("ИГР DoSB.checkoutB-01.interrupt");
+            console.log("ИГР DoCB.checkoutB-01.interrupt");
             return;
         }
 
-        console.log("ИГР DoSB.checkoutB-02");
+        console.log("ИГР DoCB.checkoutB-02");
         this.setLoading(true);
         try {
             await git.checkout({
@@ -50,21 +50,12 @@ function DoCheckoutBranch(
         if (!this.isVisible) {
             return;
         }
-
-        try {
-            var brs = await git.listBranches({
-                dir: DIR,
-                remote: "origin"
-            });
-            this.branches = brs.filter(br => br != "HEAD");
-            console.log("ИГР DoSB.collectB-01 branches:", this.branches);
-        } catch (e) {
-            reportError("doSB?.collectB-02", e);
-        }
+        this.branches = await listBranches();
+        console.log("ИГР DoCB.collectB-01 branches:", this.branches);
     };
 
     this.execute = async function() {
-        console.log("ИГР DoSB.execute");
+        console.log("ИГР DoCB.execute");
         await this.resetRootFiles();
         this.resetUIVisibility();
         await this.checkoutBranch();
@@ -77,17 +68,8 @@ function DoCheckoutBranch(
         if (!this.isVisible) {
             return;
         }
-
-        try {
-            var br = await git.currentBranch({
-                dir: DIR,
-                fullname: false,
-            });
-            this.activeBranch = br;
-            console.log("ИГР DoSB.resetAB-01 activeB:", this.activeBranch);
-        } catch (e) {
-            reportError("doSB?.resetAB-02", e);
-        }
+        this.activeBranch = await activeBranch();
+        console.log("ИГР DoCB.resetAB activeB:", this.activeBranch);
     };
 
     this.resetRootFiles = async function() {
