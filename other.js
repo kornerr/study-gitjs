@@ -16,6 +16,11 @@ function deId(sid) {
     return document.getElementById(sid);
 }
 
+// Keep newlines in HTML.
+function replaceNewlinesWithBr(text) {
+    return text.replaceAll("\n", "<br>");
+}
+
 // Return date string in YYYY-MM-DD H:m format (or something like that)
 function formatDate(dt) {
     var year = dt.getFullYear();

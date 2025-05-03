@@ -31,10 +31,11 @@ function DoDisplayNotes(
         var html = "";
         for (var i in this.notes) {
             var n = this.notes[i];
+            var text = replaceNewlinesWithBr(n.text);
             html += FMT_NOTE
                 .replaceAll("%DATE%", formatDate(n.date))
                 .replaceAll("%TERMINAL%", n.terminal)
-                .replaceAll("%TEXT%", n.text);
+                .replaceAll("%TEXT%", text);
         }
         //console.log("ИГР DoDN.displayN-2 html:", html);
         this.elSection.innerHTML = html;
