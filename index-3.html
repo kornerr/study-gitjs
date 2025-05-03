@@ -82,13 +82,22 @@
       </fieldset>
     </form>
 
+    <!-- Erase local FS-->
+    <form id="erase">
+      <fieldset>
+        <legend>Erase local FS</legend>
+        <button onclick="window.indexedDB.deleteDatabase(FS_NAME)">Erase</button>
+      </fieldset>
+    </form>
+
     <!-- Dependencies -->
     <script src="lightning-fs-3.3.6.min.js"></script>
     <script src="isomorphic-git-0.70.7-bundle.umd.min.js"></script>
 
     <!-- Global entities and constants -->
     <script>
-        window.fs = new LightningFS("STORAGE-attempt3");
+        window.FS_NAME = "STORAGE-attempt3";
+        window.fs = new LightningFS(FS_NAME);
         git.plugins.set("fs", window.fs);
         window.pfs = window.fs.promises;
        
