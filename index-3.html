@@ -24,6 +24,12 @@
         padding: 8px;
         margin-bottom: 8px;
       }
+      .note-date {
+        color: lightgrey;
+      }
+      .note-terminal{
+        color: lightgrey;
+      }
     </style>
   </head>
   <body>
@@ -64,6 +70,8 @@
         <div id="write-div">
           <div>
             <textarea id="write-text" name="write-text" rows="5" cols="35" placeholder="For example: Finally, just NOTES and just GIT, why did it took us SO long?"></textarea>
+          </div>
+          <div>
             <input id="write-post" type="submit" value="Post" />
           </div>
           <div>
@@ -98,10 +106,10 @@
         window.FMT_NOTE = `
 <div class=\"note\">
     <p>
-      <span>%DATE%</span>
-      <span>[%TERMINAL%]</span>
+      <span class=\"note-date\">%DATE%</span>
+      <span class=\"note-terminal\">[%TERMINAL%]</span>
     </p>
-    <h1>%TEXT%</h1>
+    <p class=\"note-text\">%TEXT%</p>
 </div>
 `;
         window.FMT_RAW_GITEA_FILE = "%REPO_URL%/raw/branch/%BRANCH%/%FILE%";
