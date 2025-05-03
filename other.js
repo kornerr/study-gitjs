@@ -47,7 +47,11 @@ async function listBranches() {
 function loadURL(p) {
     return new Promise(function(resolve, reject) {
         var req = new XMLHttpRequest();
-        req.open(p.method, p.url);
+        var url = p.url;
+        if (p.mangleURL) {
+            url += "?" + uuid();
+        }
+        req.open(p.method, url);
         req.onload = function() {
             if (
                 req.readyState == 4 &&

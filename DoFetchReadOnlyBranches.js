@@ -49,6 +49,7 @@ function DoFetchReadOnlyBranches() {
             var url = this.readOnlyNoteURLs[branch];
             const params = new NetRequest();
             params.url = url;
+            params.mangleURL = true;
             var res = await loadURL(params);
             //console.log("ИГР DoFROB.loadON-1 url/res:", url, res);
             if (res.status == 200) {
