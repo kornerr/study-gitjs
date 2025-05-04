@@ -121,7 +121,12 @@
     <p class=\"note-text\">%TEXT%</p>
 </div>
 `;
+        // https://git.opengamestudio.org/kornerr/study-gitjs-access
+        // https://git.opengamestudio.org/kornerr/study-gitjs-access/raw/branch/main/README.md
         window.FMT_RAW_GITEA_FILE = "%REPO_URL%/raw/branch/%BRANCH%/%FILE%";
+        // https://github.com/kornerr/check-gitjs-commits
+        // https://raw.githubusercontent.com/kornerr/check-gitjs-commits/refs/heads/desktop/notes.log
+        window.FMT_RAW_GITHUB_FILE = "https://raw.githubusercontent.com/%REPO%/refs/heads/%BRANCH%/%FILE%";
         window.ORIGIN = "origin";
         window.PROXY = "https://vercel-cors-proxy-pi.vercel.app";
         window.ROOT = "/";

@@ -2,6 +2,7 @@ function DoFetchReadOnlyBranches() {
     this._construct = function() {
         this.otherNotes = {};
         this.readOnlyNoteURLs = {};
+        this.repo = null;
         this.repoURL = null;
         this.rootFiles = [];
         this.schedule = null;
@@ -22,7 +23,9 @@ function DoFetchReadOnlyBranches() {
             if (branch == current) {
                 continue;
             }
-            var url = FMT_RAW_GITEA_FILE
+            var fmtRaw = repoRawFormat(this.repoURL);
+            var url = fmtRaw
+                .replaceAll("%REPO%", this.repo)
                 .replaceAll("%REPO_URL%", this.repoURL)
                 .replaceAll("%BRANCH%", branch)
                 .replaceAll("%FILE%", FILE_LOG_REL);
@@ -68,6 +71,7 @@ function DoFetchReadOnlyBranches() {
         for (var i in remotes) {
             var item = remotes[i];
             if (item.remote == ORIGIN) {
+                this.repo = extractRepo(item.url);
                 this.repoURL = item.url;
                 break;
             }
