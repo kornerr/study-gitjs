@@ -16,9 +16,11 @@ function deId(sid) {
     return document.getElementById(sid);
 }
 
-// Keep newlines in HTML.
-function replaceNewlinesWithBr(text) {
-    return text.replaceAll("\n", "<br>");
+// Extract `kornerr/check-gitjs` from URL like `https://github.com/kornerr/check-gitjs-commits`
+function extractRepo(str) {
+    var parts = str.split("/");
+    var len = parts.length;
+    return parts[len-2] + "/" + parts[len-1];
 }
 
 // Return date string in YYYY-MM-DD H:m format (or something like that)
@@ -135,6 +137,21 @@ function parseTerminal(content) {
     }
 
     return null;
+}
+
+// Keep newlines in HTML.
+function replaceNewlinesWithBr(text) {
+    return text.replaceAll("\n", "<br>");
+}
+
+// Detect Git provider and return corresponding format to access raw files over HTTPS
+function repoRawFormat(url) {
+    // GitHub.
+    if (url.includes("github.com")) {
+        return FMT_RAW_GITHUB_FILE;
+    }
+    // Default to Gitea.
+    return FMT_RAW_GITEA_FILE;
 }
 
 // Report error with an alert
