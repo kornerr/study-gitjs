@@ -53,14 +53,15 @@ async function listBranches() {
 
 function loadURL(p) {
     return new Promise(function(resolve, reject) {
+        console.log("ИГР loadU p:", p);
         var req = new XMLHttpRequest();
         var url = p.url;
         if (p.mangleURL) {
             url += "?uuid=" + uuid();
         }
         // Disable caching.
-        req.setRequestHeader("Cache-Control", "no-store");
         req.open(p.method, url);
+        req.setRequestHeader("Cache-Control", "no-cache");
         req.onload = function() {
             if (
                 req.readyState == 4 &&
