@@ -56,8 +56,10 @@ function loadURL(p) {
         var req = new XMLHttpRequest();
         var url = p.url;
         if (p.mangleURL) {
-            url += "?" + uuid();
+            url += "?uuid=" + uuid();
         }
+        // Disable caching.
+        req.setRequestHeader("Cache-Control", "no-store");
         req.open(p.method, url);
         req.onload = function() {
             if (
