@@ -60,8 +60,8 @@ function loadURL(p) {
             url += "?uuid=" + uuid();
         }
         // Disable caching.
-        req.setRequestHeader("Cache-Control", "no-cache");
         req.open(p.method, url);
+        req.setRequestHeader("Cache-Control", "no-cache");
         req.onload = function() {
             if (
                 req.readyState == 4 &&
